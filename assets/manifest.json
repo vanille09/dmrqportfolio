@@ -1,0 +1,18 @@
+{
+  "personajes": [
+    "LaLlorona_HIGH.fbx",
+    "LloronaPoseTFBX.fbx"
+  ],
+  "animaciones": [
+    "Llorona_Jump.fbx",
+    "Llorona_Run.fbx",
+    "Task03FBXTask03.fbx",
+    "Task04FBXTask04.fbx",
+    "Task05FBXTask05.fbx",
+    "LLORONA idle.fbx",
+    "LLORONA Idle 2.fbx"
+  ],
+  "escenarios": [
+    "cielo_Leyenditas.png"
+  ]
+}

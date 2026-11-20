@@ -1,0 +1,2503 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dmrq's portfolio · La Llorona en movimiento</title>
+<meta name="description" content="dmrq's portfolio · Soy Dulce Margarita Rojas Quintero y presento mi proceso de Animación 3D con La Llorona, incluidos mis dos idles con el modelo final, mis aportes y mis créditos.">
+<meta name="author" content="Dulce Margarita Rojas Quintero">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2216%22 fill=%22%236e1230%22/%3E%3Ctext x=%2232%22 y=%2246%22 text-anchor=%22middle%22 font-size=%2250%22 font-family=%22Georgia%22 fill=%22%23f2b5c3%22%3Ed%3C/text%3E%3C/svg%3E">
+<meta property="og:title" content="dmrq's portfolio · La Llorona en movimiento">
+<meta property="og:description" content="Mi recorrido de Animación 3D: mis pruebas, mi salto, mi carrera y mis dos idles con el modelo final de La Llorona.">
+
+<!-- ───────────────────────── Tipografía ─────────────────────────
+     Fraunces (ejes SOFT y WONK) para titulares con carácter "tierno";
+     Shantell Sans para notas al margen; Instrument Sans para lectura;
+     JetBrains Mono para datos técnicos. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Shantell+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<!-- Three.js (versión fija) vía import map: funciona incluso abriendo el archivo con doble clic -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   1. TOKENS — paleta rosa / burdeos
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:#fff7f5;      /* superficie crema-rosada */
+  --cream:#fdeef0;      /* crema */
+  --blush:#f9dde3;      /* rubor suave */
+  --rose:#f2b5c3;       /* rosa pastel */
+  --rose-deep:#e38aa1;  /* rosa editorial */
+  --berry:#b3264f;      /* acento baya */
+  --wine:#6e1230;       /* burdeos */
+  --ink:#3b0a1a;        /* vino profundo (texto) */
+  --muted:#7f4456;
+  --line:rgba(59,10,26,.18);
+  --stage:#f8e3e8;
+
+  --f-display:"Fraunces", Georgia, serif;
+  --f-cute:"Shantell Sans", "Comic Sans MS", cursive;
+  --f-body:"Instrument Sans", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --gutter:clamp(16px, 4vw, 56px);
+  --tb-h:58px;
+  color-scheme: light;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:calc(var(--tb-h) + 12px)}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font:16px/1.6 var(--f-body);
+  /* trama de puntos tipo papel de zine */
+  background-image:radial-gradient(rgba(110,18,48,.07) 1px, transparent 1.2px);
+  background-size:22px 22px;
+  overflow-x:hidden;
+}
+h1,h2,h3{font-family:var(--f-display); font-variation-settings:"SOFT" 100, "WONK" 1; line-height:1.02; margin:0; color:var(--ink)}
+p{margin:0 0 .8em}
+button,select,input{font:inherit; color:inherit}
+button{cursor:pointer}
+a{color:var(--berry)}
+:focus-visible{outline:2.5px solid var(--berry); outline-offset:3px}
+.mono{font-family:var(--f-mono); font-size:.78rem; letter-spacing:.02em}
+.cute{font-family:var(--f-cute)}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+[hidden]{display:none !important}
+
+/* ════════════════════════════════════════════════════════════════
+   2. BARRA SUPERIOR con pestañas de carpeta
+   ════════════════════════════════════════════════════════════════ */
+.toolbar{
+  position:sticky; top:0; z-index:50; height:var(--tb-h);
+  display:flex; align-items:flex-end; gap:16px;
+  padding:0 var(--gutter); background:var(--wine); color:var(--cream);
+  border-bottom:3px solid var(--ink);
+}
+.brand{align-self:center; font:700 1.15rem/1 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; color:var(--cream); white-space:nowrap; text-decoration:none}
+.brand i{font-family:var(--f-cute); font-style:normal; font-weight:400; font-size:.75rem; color:var(--rose); margin-left:6px}
+.tabs{display:flex; gap:3px; overflow-x:auto; scrollbar-width:none; flex:1; min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{
+  flex:none; text-decoration:none; color:var(--ink); background:var(--rose);
+  font:600 .78rem/1 var(--f-body); padding:10px 13px 9px; border-radius:10px 10px 0 0;
+  border:2px solid var(--ink); border-bottom:0; transform:translateY(3px);
+}
+.tabs a:nth-child(even){background:var(--blush)}
+.tabs a.on{background:var(--paper); padding-bottom:12px}
+.tabs a span{font-family:var(--f-mono); font-weight:400; color:var(--berry); margin-right:5px}
+.tb-actions{display:flex; gap:6px; align-self:center; flex:none}
+.btn{
+  display:inline-flex; align-items:center; gap:6px; border:2px solid var(--ink); border-radius:999px;
+  background:var(--paper); color:var(--ink); padding:7px 13px; font:600 .8rem/1 var(--f-body); white-space:nowrap;
+  box-shadow:2px 2px 0 var(--ink); transition:transform .12s, box-shadow .12s;
+}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--ink)}
+.btn:active{transform:translate(1px,1px); box-shadow:0 0 0 var(--ink)}
+.btn.hot{background:var(--rose)}
+.btn.dark{background:var(--berry); color:var(--paper)}
+.btn[aria-pressed="true"]{background:var(--ink); color:var(--rose)}
+.menu{position:relative}
+.menu-pop{position:absolute; right:0; top:calc(100% + 8px); background:var(--paper); border:2px solid var(--ink); border-radius:14px; padding:6px; display:grid; min-width:210px; box-shadow:5px 5px 0 var(--rose-deep); z-index:60}
+.menu-pop button{background:none; border:0; text-align:left; padding:9px 10px; border-radius:9px; font:500 .85rem var(--f-body)}
+.menu-pop button:hover{background:var(--blush)}
+.menu-pop small{display:block; color:var(--muted); font-size:.72rem}
+
+/* Barra de edición (solo en modo edición) */
+.editbar{
+  display:none; position:sticky; top:var(--tb-h); z-index:45;
+  padding:9px var(--gutter); background:var(--rose); border-bottom:2px solid var(--ink);
+  font:500 .85rem var(--f-body); gap:14px; align-items:center; flex-wrap:wrap;
+}
+body.editing .editbar{display:flex}
+.editbar b{font-family:var(--f-cute)}
+.editbar .pill{background:var(--paper); border:1.5px solid var(--ink); border-radius:99px; padding:3px 10px; font-family:var(--f-mono); font-size:.74rem}
+.editbar .pill.ok{background:var(--ink); color:var(--rose)}
+
+/* Aviso de bienvenida (archivos sin vincular) */
+.notice{
+  margin:18px var(--gutter) 0; padding:14px 18px; border:2px dashed var(--berry); border-radius:16px;
+  background:var(--paper); display:flex; gap:14px; align-items:center; flex-wrap:wrap; position:relative; z-index:2;
+}
+.notice p{margin:0; flex:1 1 320px}
+.notice b{font-family:var(--f-cute); color:var(--berry)}
+body.presenting .notice{display:none}
+
+/* ════════════════════════════════════════════════════════════════
+   3. PORTADA (masthead de zine)
+   ════════════════════════════════════════════════════════════════ */
+.cover{
+  position:relative; isolation:isolate;
+  display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:clamp(24px,4vw,64px); align-items:end;
+  padding:clamp(40px,7vw,96px) var(--gutter) clamp(56px,7vw,110px);
+  border-bottom:2px solid var(--ink);
+  overflow-x:clip; /* el círculo decorativo no genera scroll horizontal */
+}
+/* plano de profundidad: "sol" rosa detrás del título */
+.cover::before{
+  content:""; position:absolute; z-index:-1; width:min(62vw,720px); aspect-ratio:1; border-radius:50%;
+  background:var(--rose); right:-12vw; top:-22vw; opacity:.55;
+}
+.cover-side{
+  position:absolute; left:calc(var(--gutter) * .35); top:50%; transform:translateY(-50%) rotate(180deg);
+  writing-mode:vertical-rl; font:500 .68rem var(--f-mono); letter-spacing:.24em; color:var(--muted);
+}
+.cover-meta{font:500 .78rem var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--wine); display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px}
+.cover-meta span{border:1.5px solid var(--wine); border-radius:99px; padding:4px 10px; background:var(--paper)}
+.cover-title{font-size:clamp(3rem,8.4vw,8.4rem); font-weight:900; letter-spacing:-.035em; line-height:.86; color:var(--wine)}
+.cover-title em{display:block; font-style:italic; font-weight:340; color:var(--berry); font-size:.46em; letter-spacing:-.01em; margin:.18em 0 0 .6em}
+.cover-lede{max-width:56ch; font-size:1.08rem; margin-top:28px}
+.cover-by{font-family:var(--f-cute); font-size:1.05rem; margin-top:10px}
+.cover-by [data-bind]{border-bottom:2px solid var(--rose-deep)}
+.sticker{
+  position:absolute; right:clamp(16px,38vw,560px); top:clamp(26px,5vw,60px);
+  width:118px; height:118px; border-radius:50%; background:var(--berry); color:var(--paper);
+  display:grid; place-items:center; text-align:center; transform:rotate(-14deg);
+  font:600 .82rem/1.15 var(--f-cute); border:2px solid var(--ink); box-shadow:4px 4px 0 var(--ink);
+}
+.sticker b{display:block; font:900 2rem/1 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1}
+
+/* tarjeta índice con pestañas de carpeta, rota la retícula */
+.index-card{position:relative; transform:rotate(1.6deg); margin-bottom:0; z-index:3}
+.index-card::before{ /* plano burdeos desplazado */
+  content:""; position:absolute; inset:0; background:var(--wine); border-radius:4px 18px 18px 18px; transform:translate(14px,14px) rotate(-2.4deg); z-index:-1;
+}
+.ic-tab{display:inline-block; background:var(--rose); border:2px solid var(--ink); border-bottom:0; border-radius:12px 12px 0 0; padding:7px 16px 6px; font:600 .8rem var(--f-cute)}
+.ic-body{
+  background:var(--paper); border:2px solid var(--ink); border-radius:0 18px 18px 18px; padding:18px 20px 16px;
+  background-image:repeating-linear-gradient(transparent 0 31px, rgba(179,38,79,.16) 31px 32px);
+}
+.ic-body h3{font-size:1.4rem; margin-bottom:6px}
+.ic-list{list-style:none; margin:0; padding:0}
+.ic-list a{display:grid; grid-template-columns:2.2em 1fr auto; gap:8px; align-items:baseline; text-decoration:none; color:var(--ink); padding:5px 0}
+.ic-list a:hover .ic-name{color:var(--berry); text-decoration:underline}
+.ic-num{font:600 .74rem var(--f-mono); color:var(--berry)}
+.ic-name{font-weight:600}
+.ic-crit{font:500 .68rem var(--f-mono); background:var(--blush); border:1px solid var(--line); border-radius:99px; padding:2px 8px; white-space:nowrap}
+.ic-foot{margin:12px 0 0; font:400 .82rem var(--f-cute); color:var(--muted)}
+.ic-foot kbd{font-family:var(--f-mono); background:var(--blush); border:1px solid var(--ink); border-radius:5px; padding:0 5px; font-size:.75rem}
+
+/* ════════════════════════════════════════════════════════════════
+   4. ENCABEZADOS DE SECCIÓN
+   ════════════════════════════════════════════════════════════════ */
+section{position:relative}
+.sec-head{display:grid; grid-template-columns:auto 1fr; gap:4px 22px; align-items:end; margin-bottom:clamp(26px,4vw,48px); max-width:1100px}
+.sec-num{grid-row:span 2; font:300 clamp(3.5rem,8vw,7rem)/.8 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; color:transparent; -webkit-text-stroke:2px var(--berry)}
+.sec-head h2{font-size:clamp(2.1rem,5vw,3.8rem); font-weight:800; letter-spacing:-.02em}
+.sec-head .kicker{margin:0; grid-column:1 / -1}
+.kicker{font:600 1.02rem var(--f-cute); color:var(--berry)}
+.crit-tag{
+  display:inline-block; font:600 .68rem var(--f-mono); letter-spacing:.1em; text-transform:uppercase;
+  background:var(--ink); color:var(--rose); padding:5px 10px; border-radius:4px; transform:rotate(-2deg);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   5. CURADURÍA — escalera de progreso
+   ════════════════════════════════════════════════════════════════ */
+.curaduria{padding:clamp(60px,8vw,110px) var(--gutter) clamp(60px,8vw,110px)}
+.cur-intro{max-width:64ch; font-size:1.06rem}
+.cur-intro::first-letter{float:left; font:900 4.2rem/.8 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; color:var(--berry); margin:6px 10px 0 0}
+.ladder{display:grid; grid-template-columns:repeat(var(--cols,4),minmax(0,1fr)); gap:18px; align-items:end; margin-top:40px; position:relative}
+.cat-filter{display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; align-items:center}
+.cat-filter .t{font:600 .7rem var(--f-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-right:4px}
+.cat-filter button{font:600 .9rem var(--f-cute); padding:7px 14px; border-radius:99px; border:2px solid var(--ink); background:var(--paper); color:var(--ink); cursor:pointer}
+.cat-filter button b{font:600 .68rem var(--f-mono); margin-left:6px; opacity:.75}
+.cat-filter button.on{background:var(--ink); color:var(--rose)}
+.step-cat{display:inline-block; font:600 .62rem var(--f-mono); letter-spacing:.08em; text-transform:uppercase; padding:2px 7px; border-radius:4px; background:var(--blush); color:var(--wine); margin-bottom:8px}
+.ladder::before{ /* línea de tendencia ascendente */
+  content:""; position:absolute; left:4%; right:4%; bottom:30%; height:2px; background:repeating-linear-gradient(90deg,var(--berry) 0 10px,transparent 10px 18px);
+  transform:rotate(-6deg); transform-origin:left; z-index:0;
+}
+.step{
+  position:relative; z-index:1; display:block; text-decoration:none; color:var(--ink);
+  background:var(--paper); border:2px solid var(--ink); border-radius:16px; padding:16px 16px 14px;
+  box-shadow:6px 6px 0 var(--rose); transition:transform .15s, box-shadow .15s;
+}
+.step:hover{transform:translate(-2px,-3px); box-shadow:9px 9px 0 var(--rose-deep)}
+.step{margin-bottom:calc(var(--rise,0) * 1px)}
+.step.peak{background:var(--wine); color:var(--cream); box-shadow:6px 6px 0 var(--berry)}
+.step.peak .step-stage, .step.peak .step-file{color:var(--rose)}
+.step.peak .step-cat{background:var(--berry); color:var(--cream)}
+.step-code{font:800 1.6rem/1 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1}
+.step-stage{font:600 .86rem var(--f-cute); color:var(--berry); margin:4px 0 8px}
+.step-title{font-weight:600; font-size:.95rem; line-height:1.3; margin-bottom:10px}
+.step-file{font:400 .68rem var(--f-mono); color:var(--muted); word-break:break-all}
+.meter{display:flex; flex-wrap:wrap; gap:4px; margin-top:12px; align-items:center}
+.meter i{flex:0 1 12px}
+.meter span{flex-basis:100%; margin-left:0}
+.meter i{width:18px; height:7px; border-radius:99px; background:var(--blush); border:1px solid currentColor}
+.meter i.on{background:var(--berry)}
+.meter span{font:500 .66rem var(--f-mono); margin-left:6px; opacity:.8}
+.step .st{position:absolute; top:-12px; right:12px; font:600 .66rem var(--f-mono); padding:3px 8px; border-radius:99px; border:1.5px solid var(--ink); background:var(--rose)}
+.step .st.ok{background:var(--ink); color:var(--rose)}
+.cur-notes{display:flex; gap:16px; flex-wrap:wrap; margin-top:34px}
+.margin-note{
+  font:400 .95rem/1.4 var(--f-cute); color:var(--wine); max-width:320px; padding:12px 14px; background:var(--blush);
+  border-left:4px solid var(--berry); transform:rotate(-1.2deg);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   6. PIEZAS — visor + columna editorial
+   ════════════════════════════════════════════════════════════════ */
+.piece{padding:clamp(56px,7vw,100px) var(--gutter); border-top:2px solid var(--ink)}
+.piece:nth-of-type(even){background:linear-gradient(var(--cream),var(--paper))}
+.piece-num{
+  position:absolute; right:var(--gutter); top:clamp(10px,2vw,30px); pointer-events:none; user-select:none;
+  font:900 clamp(7rem,20vw,17rem)/.8 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1;
+  color:transparent; -webkit-text-stroke:2px var(--rose); opacity:.9; z-index:0;
+}
+.piece.flip .piece-num{right:auto; left:var(--gutter)}
+.piece-grid{position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:clamp(24px,3.5vw,54px); align-items:start}
+.piece.flip .piece-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.55fr)}
+.piece.flip .piece-stage{order:2}
+.piece-stage{position:relative; min-width:0}
+.piece-text{min-width:0}
+.ptext-card,.ficha,.cred-box{overflow-wrap:anywhere}
+.rot-tag{
+  position:relative; display:table; z-index:4; left:auto; top:auto; max-width:100%; margin-bottom:14px; transform:rotate(-2deg);
+  background:var(--berry); color:var(--paper); border:2px solid var(--ink); border-radius:6px;
+  font:600 .82rem var(--f-cute); padding:5px 12px; box-shadow:3px 3px 0 var(--ink);
+}
+.piece.flip .rot-tag{left:auto; right:auto; transform:rotate(2deg)}
+.path-ref{margin-top:14px; font:400 .7rem/1.45 var(--f-mono); color:var(--muted); word-break:break-all; padding-left:12px; border-left:2px solid var(--rose-deep)}
+.path-ref b{color:var(--wine); font-weight:600}
+
+.folder-tab{display:inline-block; background:var(--wine); color:var(--cream); padding:7px 16px 6px; border-radius:12px 12px 0 0; font:700 .85rem var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1}
+.folder-tab span{font:400 .7rem var(--f-mono); color:var(--rose)}
+.ptext-card{background:var(--paper); border:2px solid var(--ink); border-radius:0 18px 18px 18px; padding:22px 22px 18px; position:relative}
+.ptitle{font-size:clamp(1.8rem,3.2vw,2.6rem); font-weight:800; letter-spacing:-.02em; margin:4px 0 6px}
+.stage-line{color:var(--muted); margin-bottom:14px}
+.note{font-size:1.02rem}
+.mine{position:relative; margin:22px 0 10px; padding:18px 16px 10px; border:2px solid var(--berry); border-radius:14px; background:var(--blush)}
+.mine-label{position:absolute; top:-13px; left:14px; background:var(--berry); color:var(--paper); font:600 .76rem var(--f-cute); padding:3px 10px; border-radius:99px; transform:rotate(-2deg)}
+.iter{margin-top:22px}
+.iter h3{font:700 .95rem var(--f-body); letter-spacing:.02em; margin-bottom:10px; display:flex; gap:8px; align-items:center}
+.iter h3::before{content:""; width:18px; height:2px; background:var(--berry)}
+.iter-list{list-style:none; margin:0; padding:0; display:grid; gap:10px}
+.iter-list li{position:relative; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1.5px solid var(--ink); border-radius:12px; overflow:hidden; background:var(--paper)}
+.iter-list li > div{padding:10px 11px; font-size:.86rem; line-height:1.45}
+.iter-list li > div + div{border-left:1.5px dashed var(--line)}
+.iter-list li > div:nth-child(3){background:var(--blush)}
+.iter-list b{display:block; font:600 .66rem var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--berry); margin-bottom:3px}
+.iter-list p{margin:0}
+.ficha{margin-top:18px; border-top:2px solid var(--ink); padding-top:12px}
+.ficha h4{margin:0 0 6px; font:600 .7rem var(--f-mono); letter-spacing:.12em; text-transform:uppercase; color:var(--wine)}
+.ficha dl{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px 12px; margin:0 0 10px}
+.ficha dt{font:400 .64rem var(--f-mono); color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
+.ficha dd{margin:0; font:600 .82rem var(--f-mono)}
+.ficha .wait{font:400 .8rem var(--f-cute); color:var(--muted)}
+
+/* ════════════════════════════════════════════════════════════════
+   7. VISOR FBX
+   ════════════════════════════════════════════════════════════════ */
+.viewer{position:relative; container-type:inline-size; background:var(--paper); border:2px solid var(--ink); border-radius:20px; overflow:hidden; box-shadow:12px 12px 0 var(--rose)}
+.piece:nth-of-type(odd) .viewer{box-shadow:12px 12px 0 var(--rose-deep)}
+.vw-tabs{display:flex; flex-wrap:wrap; gap:4px; padding:8px 12px 0; background:var(--blush); border-bottom:2px solid var(--ink)}
+.vw-tabs button{border:2px solid var(--ink); border-bottom:0; border-radius:10px 10px 0 0; background:var(--rose); padding:6px 14px 5px; font:600 .8rem var(--f-body); margin-bottom:-2px}
+.vw-tabs button.on{background:var(--paper)}
+.vw-stage{position:relative; aspect-ratio:4/3.1; min-height:320px; background:var(--stage); touch-action:none}
+.vw-canvas, .vw-canvas canvas{position:absolute; inset:0; width:100% !important; height:100% !important; display:block}
+.vw-badges{position:absolute; left:12px; top:12px; display:flex; gap:6px; flex-wrap:wrap; pointer-events:none; max-width:46%}
+.badge{font:600 .66rem/1 var(--f-mono); letter-spacing:.07em; text-transform:uppercase; padding:6px 9px; border-radius:999px; background:var(--wine); color:var(--cream); border:1.5px solid var(--wine)}
+.badge.static{background:var(--paper); color:var(--wine)}
+.badge.light{background:rgba(255,247,245,.9); color:var(--ink); border-color:var(--ink); text-transform:none; letter-spacing:0}
+.vw-tools{position:absolute; right:10px; top:10px; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; max-width:54%}
+.tool, .seg button{font:600 .72rem/1 var(--f-body); background:rgba(255,247,245,.94); border:1.5px solid var(--ink); border-radius:999px; padding:6px 10px; color:var(--ink)}
+.tool:hover, .seg button:hover{background:var(--blush)}
+.seg{display:inline-flex; border:1.5px solid var(--ink); border-radius:999px; overflow:hidden; background:rgba(255,247,245,.94)}
+.seg button{border:0; border-radius:0}
+.seg button + button{border-left:1.5px solid var(--ink)}
+.seg button.on, .tool[aria-pressed="true"]{background:var(--wine); color:var(--cream)}
+.tool.lightctl{display:inline-flex; align-items:center; gap:6px}
+.tool.lightctl input{width:70px}
+.vw-empty, .vw-loading, .vw-drop{position:absolute; inset:0; display:grid; place-content:center; justify-items:center; text-align:center; gap:10px; padding:24px}
+.vw-empty{background:repeating-linear-gradient(-45deg, var(--stage) 0 14px, var(--blush) 14px 28px)}
+.vw-empty .card{background:var(--paper); border:2px solid var(--ink); border-radius:16px; padding:18px 20px; max-width:420px; box-shadow:5px 5px 0 var(--rose-deep)}
+.vw-empty h4{margin:0 0 4px; font:800 1.3rem var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1}
+.vw-empty .fname{font:600 .78rem var(--f-mono); color:var(--berry); word-break:break-all}
+.vw-empty small{display:block; color:var(--muted); font-size:.78rem; margin-top:8px; line-height:1.4}
+.vw-empty .err{color:var(--berry); font-family:var(--f-mono); font-size:.72rem}
+.vw-loading{background:rgba(248,227,232,.85); font:600 .9rem var(--f-cute)}
+.spinner{width:34px; height:34px; border-radius:50%; border:3px solid var(--rose); border-top-color:var(--wine); animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.vw-drop{background:rgba(110,18,48,.82); color:var(--paper); font:700 1.3rem var(--f-cute); border:3px dashed var(--rose); border-radius:12px; margin:10px; pointer-events:none}
+.vw-anim{display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; padding:10px 12px; background:var(--cream); border-top:2px solid var(--ink)}
+.vw-anim select{border:1.5px solid var(--ink); border-radius:99px; background:var(--paper); padding:5px 10px; font:600 .74rem var(--f-body); max-width:180px}
+.iconbtn{width:34px; height:34px; display:grid; place-items:center; border:2px solid var(--ink); border-radius:50%; background:var(--paper); font:700 .8rem var(--f-body); flex:none}
+.iconbtn.play{background:var(--wine); color:var(--paper); width:40px; height:40px}
+.iconbtn:hover{background:var(--rose)}
+.iconbtn.play:hover{background:var(--berry)}
+.scrub{flex:1 1 160px; min-width:120px}
+.time{font:600 .72rem var(--f-mono); min-width:112px; text-align:right}
+.vw-static{padding:10px 14px; background:var(--cream); border-top:2px solid var(--ink); font:500 .82rem var(--f-cute); color:var(--wine)}
+.viewer:fullscreen{border-radius:0; display:flex; flex-direction:column}
+.viewer:fullscreen .vw-stage{flex:1; aspect-ratio:auto}
+@container (max-width:560px){
+  .vw-stage{display:flex; flex-direction:column; aspect-ratio:auto; min-height:0}
+  .vw-badges{position:static; order:0; padding:10px; max-width:none; background:var(--blush)}
+  .vw-canvas{position:relative; inset:auto; order:1; width:100% !important; height:auto !important; aspect-ratio:1.1; min-height:260px}
+  .vw-tools{position:static; order:2; padding:10px; justify-content:flex-start; max-width:none; background:var(--blush)}
+  .vw-tools .lightctl{display:none}
+  .vw-badges{max-width:none}
+  .time{min-width:0}
+}
+
+/* Slider de rango personalizado con progreso (--p) */
+input[type=range]{-webkit-appearance:none; appearance:none; height:6px; border-radius:99px; background:linear-gradient(90deg,var(--berry) var(--p,0%), var(--rose) var(--p,0%)); cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:17px; height:17px; border-radius:50%; background:var(--wine); border:2.5px solid var(--paper); box-shadow:0 0 0 1.5px var(--wine)}
+input[type=range]::-moz-range-thumb{width:13px; height:13px; border-radius:50%; background:var(--wine); border:2.5px solid var(--paper); box-shadow:0 0 0 1.5px var(--wine)}
+
+/* ════════════════════════════════════════════════════════════════
+   8. ANTES / DESPUÉS
+   ════════════════════════════════════════════════════════════════ */
+.compare{padding:clamp(60px,8vw,110px) var(--gutter); background:var(--wine); color:var(--cream); border-top:3px solid var(--ink)}
+.compare .sec-head h2, .compare h3{color:var(--paper)}
+.compare .kicker{color:var(--rose)}
+.compare .sec-num{-webkit-text-stroke-color:var(--rose)}
+.cmp-intro{max-width:70ch; font-size:1.04rem}
+.final-link{color:var(--rose); text-underline-offset:4px}
+.cmp-grid{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:18px; align-items:center; margin-top:30px}
+.cmp-side{margin:0; position:relative}
+.cmp-side .viewer{box-shadow:10px 10px 0 var(--berry); color:var(--ink)}
+.cmp-side.after .viewer{box-shadow:10px 10px 0 var(--rose)}
+.stamp{position:absolute; z-index:5; top:-18px; left:16px; font:800 1rem/1 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; padding:8px 14px; border-radius:8px; border:2px solid var(--ink); transform:rotate(-3deg); background:var(--paper); color:var(--ink)}
+.cmp-side.after .stamp{background:var(--rose); transform:rotate(2.5deg); left:auto; right:16px}
+.stamp small{font:500 .68rem var(--f-mono); margin-left:6px}
+.cmp-arrow{font:900 3rem var(--f-display); color:var(--rose)}
+.cmp-bar{
+  display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; margin:30px auto 0; max-width:900px;
+  background:var(--paper); color:var(--ink); border:2px solid var(--ink); border-radius:999px; padding:10px 16px; box-shadow:6px 6px 0 var(--berry);
+}
+.cmp-bar .lbl{font:600 .82rem var(--f-cute); color:var(--berry)}
+.cmp-bar .scrub{flex:1 1 200px}
+.cmp-table-wrap{margin-top:46px; background:var(--paper); color:var(--ink); border:2px solid var(--ink); border-radius:18px; overflow:hidden; position:relative}
+.cmp-table{width:100%; border-collapse:collapse}
+.cmp-table th{font:600 .7rem var(--f-mono); letter-spacing:.1em; text-transform:uppercase; text-align:left; padding:12px 14px; background:var(--blush); border-bottom:2px solid var(--ink)}
+.cmp-table th:nth-child(3){background:var(--rose)}
+.cmp-table td{vertical-align:top; padding:12px 14px; border-bottom:1.5px dashed var(--line); font-size:.92rem; line-height:1.45}
+.cmp-table td:first-child{font:700 1rem var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; width:22%}
+.cmp-table td:nth-child(3){background:rgba(242,181,195,.25)}
+.cmp-table tr:last-child td{border-bottom:0}
+.cmp-table .rm{position:static}
+.verdict{margin:40px auto 0; max-width:780px; text-align:center; font:italic 400 clamp(1.3rem,2.6vw,1.9rem)/1.3 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; color:var(--paper); position:relative}
+.verdict::before{content:"“"; display:block; font:900 5rem/0.6 var(--f-display); color:var(--rose)}
+
+/* ════════════════════════════════════════════════════════════════
+   9. EXTRAS, BREAKDOWN, CRÉDITOS
+   ════════════════════════════════════════════════════════════════ */
+.extras{padding:clamp(56px,7vw,96px) var(--gutter) 30px; border-top:2px solid var(--ink)}
+.dropzone{
+  display:grid; grid-template-columns:auto 1fr auto; gap:18px; align-items:center; max-width:880px;
+  border:2.5px dashed var(--berry); border-radius:20px; padding:20px 24px; background:var(--paper);
+}
+.dropzone .big{font:900 2.6rem/1 var(--f-display); color:var(--berry)}
+.dropzone p{margin:0}
+.dropzone small{color:var(--muted)}
+.extras .piece{border-top:2px dashed var(--line); padding-left:0; padding-right:0; background:none}
+body.presenting .dropzone{display:none}
+
+.breakdown{padding:clamp(60px,8vw,110px) var(--gutter); border-top:2px solid var(--ink); background:var(--blush)}
+.legend{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; align-items:center}
+.legend span.t{font:600 .8rem var(--f-cute); margin-right:4px}
+.chip{display:inline-flex; align-items:center; gap:5px; font:600 .72rem/1 var(--f-body); padding:6px 11px; border-radius:99px; border:1.5px solid var(--ink); white-space:nowrap; background:var(--paper)}
+.chip::before{content:""; width:8px; height:8px; border-radius:50%; background:currentColor}
+.chip.yo{background:var(--berry); color:var(--paper); border-color:var(--berry)}
+.chip.decidi{background:var(--paper); color:var(--berry); border-color:var(--berry)}
+.chip.apoyo{background:var(--rose); color:var(--ink)}
+.chip.base{background:#ece2e4; color:#5c4a50; border-color:#9a8a8f}
+.chip.pendiente{background:transparent; color:var(--muted); border-style:dashed}
+body.editing .bd-table .chip{cursor:pointer}
+body.editing .bd-table .chip:hover{outline:2px solid var(--berry); outline-offset:2px}
+.bd-wrap{display:grid; grid-template-columns:minmax(0,2.2fr) minmax(0,1fr); gap:28px; align-items:start}
+.bd-table{width:100%; border-collapse:separate; border-spacing:0; background:var(--paper); border:2px solid var(--ink); border-radius:18px; overflow:hidden; box-shadow:10px 10px 0 var(--wine)}
+.bd-table th{font:600 .7rem var(--f-mono); letter-spacing:.1em; text-transform:uppercase; text-align:left; padding:12px 14px; background:var(--wine); color:var(--cream)}
+.bd-table td{padding:12px 14px; border-top:1.5px dashed var(--line); vertical-align:top; font-size:.9rem; line-height:1.45}
+.bd-table td:first-child{font-weight:700; width:30%}
+.bd-table td:nth-child(2){width:1%}
+.bd-summary{background:var(--paper); border:2px solid var(--ink); border-radius:18px; padding:18px; transform:rotate(-1.2deg); position:sticky; top:calc(var(--tb-h) + 24px)}
+.bd-summary h3{font-size:1.5rem; margin-bottom:12px}
+.bd-count{display:flex; align-items:baseline; gap:10px; padding:6px 0; border-bottom:1.5px dashed var(--line)}
+.bd-count b{font:900 2rem/1 var(--f-display); color:var(--berry); min-width:1.4em}
+.bd-summary p{font:400 .9rem/1.45 var(--f-cute); margin-top:12px; color:var(--wine)}
+
+.credits{padding:clamp(60px,8vw,110px) var(--gutter) 40px; border-top:3px solid var(--ink)}
+.cred-grid{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:26px 22px}
+.cred-col{grid-column:span 4}
+.cred-col.wide{grid-column:span 8}
+.cred-col:nth-child(2){margin-top:34px}
+.cred-col:nth-child(3){margin-top:12px}
+.cred-col .folder-tab{background:var(--berry)}
+.cred-box{background:var(--paper); border:2px solid var(--ink); border-radius:0 16px 16px 16px; padding:14px 16px}
+.cred-list{list-style:none; margin:0; padding:0}
+.cred-list li{position:relative; padding:8px 0; border-bottom:1.5px dashed var(--line); font-size:.88rem; line-height:1.4}
+.cred-list li:last-child{border-bottom:0}
+.cred-list .n{font-weight:700; display:block}
+.cred-list .d{color:var(--muted)}
+.files-table{width:100%; border-collapse:collapse; font-size:.82rem}
+.files-table th{text-align:left; font:600 .64rem var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:6px 8px; border-bottom:2px solid var(--ink)}
+.files-table td{padding:8px; border-bottom:1.5px dashed var(--line); vertical-align:top}
+.files-table td:first-child{font:600 .78rem var(--f-mono); color:var(--wine); word-break:break-all}
+.files-table .ok{color:var(--berry); font-weight:700}
+.closing{margin-top:56px; display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); gap:30px; align-items:end}
+.closing blockquote{margin:0; font:400 clamp(1.4rem,2.8vw,2.2rem)/1.25 var(--f-display); font-variation-settings:"SOFT" 100,"WONK" 1; color:var(--wine)}
+.signature{font:600 clamp(1.8rem,4vw,2.8rem)/1 var(--f-cute); color:var(--berry); transform:rotate(-4deg); text-align:right}
+.signature small{display:block; font:400 .74rem var(--f-mono); color:var(--muted); transform:none; margin-top:10px}
+footer{padding:26px var(--gutter) 90px; font:400 .74rem var(--f-mono); color:var(--muted); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; border-top:2px solid var(--ink); margin-top:50px}
+
+/* ════════════════════════════════════════════════════════════════
+   10. EDICIÓN de textos
+   ════════════════════════════════════════════════════════════════ */
+[data-bind]{white-space:pre-line}
+.edit-only{display:none !important}
+body.editing .edit-only{display:inline-flex !important}
+body.editing [data-bind]{outline:1.5px solid rgba(179,38,79,.25); outline-offset:2px; border-radius:4px; cursor:text}
+body.editing [data-bind]:hover{background:rgba(242,181,195,.25)}
+body.editing [data-bind]:focus{outline:2px solid var(--berry); background:#fff}
+body.editing [data-bind]:empty::before{content:attr(data-ph); color:var(--muted); opacity:.6; font-style:italic}
+body.editing .is-draft{outline:1.5px dashed var(--berry) !important; background:repeating-linear-gradient(-45deg,transparent 0 6px,rgba(242,181,195,.35) 6px 12px)}
+.rm{position:absolute; top:6px; right:6px; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--ink); background:var(--paper); font:700 .8rem/1 var(--f-body); place-items:center; justify-content:center; align-items:center; z-index:3}
+.rm:hover{background:var(--berry); color:var(--paper)}
+.add{margin-top:10px; border:1.5px dashed var(--berry); background:transparent; color:var(--berry); border-radius:99px; padding:6px 12px; font:600 .78rem var(--f-body)}
+.compare .add{color:var(--rose); border-color:var(--rose)}
+
+/* ════════════════════════════════════════════════════════════════
+   11. MODO PRESENTACIÓN (docente)
+   ════════════════════════════════════════════════════════════════ */
+.hud{
+  position:fixed; z-index:80; left:50%; bottom:18px; transform:translateX(-50%);
+  display:none; align-items:center; gap:10px; background:var(--ink); color:var(--cream);
+  border-radius:999px; padding:8px 10px; box-shadow:0 10px 30px rgba(59,10,26,.35);
+}
+body.presenting .hud{display:flex}
+.hud button{width:38px; height:38px; border-radius:50%; border:2px solid var(--rose); background:transparent; color:var(--rose); font:700 1rem var(--f-body)}
+.hud button:hover{background:var(--rose); color:var(--ink)}
+.hud .hud-label{min-width:210px; text-align:center; font:600 .85rem var(--f-cute)}
+.hud .hud-label small{display:block; font:400 .66rem var(--f-mono); color:var(--rose)}
+.hud .hud-exit{width:auto; padding:0 14px; border-radius:99px; font-size:.75rem}
+body.presenting .tb-actions > :not(.keep){display:none}
+body.presenting [data-step]{min-height:calc(100vh - var(--tb-h))}
+body.presenting .edit-only{display:none !important}
+
+/* Toast + overlay de arrastre */
+.toast{position:fixed; z-index:90; left:50%; top:calc(var(--tb-h) + 16px); transform:translate(-50%,-20px); opacity:0; pointer-events:none;
+  background:var(--ink); color:var(--cream); border-radius:14px; padding:11px 18px; font:500 .88rem var(--f-body); transition:.25s; max-width:min(92vw,560px); text-align:center; box-shadow:5px 5px 0 var(--berry)}
+.toast.show{opacity:1; transform:translate(-50%,0)}
+.page-drop{position:fixed; inset:0; z-index:95; display:none; place-content:center; text-align:center; background:rgba(110,18,48,.88); color:var(--paper)}
+.page-drop.show{display:grid}
+.page-drop div{border:3px dashed var(--rose); border-radius:28px; padding:48px 56px}
+.page-drop h2{color:var(--paper); font-size:clamp(2rem,5vw,3.6rem)}
+.page-drop p{font:500 1rem var(--f-cute); color:var(--rose); margin-top:12px}
+
+/* ════════════════════════════════════════════════════════════════
+   12. RESPONSIVE
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width:1180px){ .cover-side{display:none} }
+@media (max-width:1000px){
+  .cover{grid-template-columns:1fr}
+  .index-card{margin-bottom:0; max-width:560px; justify-self:end; width:100%}
+  .sticker{position:static; grid-row:1; justify-self:end; width:96px; height:96px}
+  .piece-grid, .piece.flip .piece-grid{grid-template-columns:1fr}
+  .piece.flip .piece-stage{order:0}
+  .bd-wrap{grid-template-columns:1fr}
+  .bd-summary{position:static; transform:none}
+  .cred-col, .cred-col.wide{grid-column:span 12; margin-top:0 !important}
+  .closing{grid-template-columns:1fr}
+  .signature{text-align:left}
+  .tb-actions .btn .lbl-long{display:none}
+}
+@media (max-width:1180px) and (min-width:761px){
+  .ladder{grid-template-columns:repeat(min(var(--cols,4),3),minmax(0,1fr)); row-gap:30px}
+  .step:nth-child(n){margin-bottom:0}
+  .ladder::before{display:none}
+}
+@media (max-width:760px){
+  :root{--tb-h:54px}
+  .brand i{display:none}
+  .tabs{display:none}
+  .toolbar{justify-content:space-between; align-items:center}
+  .piece-stage .rot-tag{position:relative; display:table; left:auto; right:auto; top:auto; max-width:100%; margin-bottom:14px; transform:rotate(-2deg)}
+  .cover-side{display:none}
+  .ladder{grid-template-columns:1fr 1fr}
+  .step:nth-child(n){margin-bottom:0}
+  .ladder::before{display:none}
+  .cmp-grid{grid-template-columns:1fr; gap:34px}
+  .cmp-arrow{transform:rotate(90deg); justify-self:center; line-height:.5}
+  .cmp-bar{border-radius:18px}
+  .iter-list li{grid-template-columns:1fr}
+  .iter-list li > div + div{border-left:0; border-top:1.5px dashed var(--line)}
+  .ficha dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cmp-table thead{display:none}
+  .cmp-table, .cmp-table tbody, .cmp-table tr, .cmp-table td{display:block; width:100% !important}
+  .cmp-table tr{border-bottom:2px solid var(--ink)}
+  .cmp-table td{border-bottom:0}
+  .cmp-table td[data-h]::before{content:attr(data-h); display:block; font:600 .62rem var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--berry)}
+  .bd-table td{display:block; width:100% !important; border-top:0}
+  .bd-table tr{display:block; border-top:1.5px dashed var(--line); padding:6px 0}
+  .bd-table thead{display:none}
+  .dropzone{grid-template-columns:1fr}
+  .hud .hud-label{min-width:120px}
+}
+@media (max-width:460px){ .ladder{grid-template-columns:1fr} .tb-actions .btn{padding:7px 10px} }
+@media (max-width:380px){
+  :root{--tb-h:90px}
+  .toolbar{flex-direction:column; justify-content:center; gap:8px}
+  .hud{max-width:calc(100vw - 16px); gap:5px; padding:8px}
+  .hud .hud-label{min-width:0; flex:1; overflow-wrap:anywhere}
+  .hud button{flex-shrink:0}
+}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important; animation:none !important} }
+</style>
+</head>
+
+<body>
+<!-- ══════════════ BARRA SUPERIOR ══════════════ -->
+<nav class="toolbar" aria-label="Navegación del portafolio">
+  <a class="brand" href="#portada">dmrq's portfolio<i>animación 3D</i></a>
+  <div class="tabs" id="tabs"></div>
+  <div class="tb-actions">
+    <button class="btn hot" id="btnUpload" title="Selecciona uno o varios .fbx (puedes elegir todos a la vez: se asignan por nombre)">+ <span class="lbl-long">Subir&nbsp;</span>FBX</button>
+    <button class="btn" id="btnEdit" aria-pressed="false" title="Editar textos, breakdown y créditos">✎ <span class="lbl-long">Editar</span></button>
+    <button class="btn dark keep" id="btnPresent" aria-pressed="false" title="Modo presentación para el docente (tecla P)">▶ <span class="lbl-long">Presentación</span></button>
+    <div class="menu">
+      <button class="btn" id="btnData" aria-haspopup="true" aria-expanded="false" title="Respaldo de datos">⋯</button>
+      <div class="menu-pop" id="dataMenu" hidden>
+        <button id="btnExport">Exportar JSON<small>Respaldo de textos, breakdown, créditos y tramos</small></button>
+        <button id="btnImport">Importar JSON<small>Restaura un respaldo exportado</small></button>
+        <button id="btnReset">Restaurar plantilla<small>Vuelve a los textos iniciales (no borra los FBX)</small></button>
+        <button id="btnForget">Olvidar FBX guardados<small>Borra los archivos guardados en este navegador</small></button>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="editbar" id="editbar"></div>
+
+<input type="file" id="fileInput" accept=".fbx" multiple hidden>
+<input type="file" id="jsonInput" accept="application/json,.json" hidden>
+
+<div class="notice" id="notice" hidden>
+  <p><b>Abriste la página con doble clic:</b> así el navegador no puede leer la carpeta <span class="mono">assets</span>. Pulsa <strong>“+ Subir FBX”</strong> y selecciona a la vez mis archivos <span class="mono">.fbx</span> de <span class="mono">assets/personajes</span>, <span class="mono">assets/animaciones</span> y <span class="mono">assets/escenarios</span>: se asignan solos por nombre y quedan guardados en este navegador. Desde el enlace público o con <span class="mono">servir.ps1</span> todo carga automáticamente.</p>
+  <button class="btn hot" id="noticeUpload">+ Subir FBX</button>
+  <button class="btn" id="noticeClose" aria-label="Cerrar aviso">Entendido</button>
+</div>
+
+<!-- ══════════════ PORTADA ══════════════ -->
+<header class="cover" id="portada" data-step data-label="Portada">
+  <div class="cover-side">Portafolio de Animación 3D — proceso, piezas y créditos</div>
+  <div>
+    <div class="cover-meta"><span data-bind="meta.course"></span><span data-bind="meta.term"></span><span>Maya 2027 · HumanIK · Three.js</span><span id="coverFiles">archivos FBX</span></div>
+    <h1 class="cover-title"><span data-bind="meta.brand"></span><em><span data-bind="meta.character"></span> en movimiento</em></h1>
+    <p class="cover-lede" data-bind="meta.intro"></p>
+    <p class="cover-by">por <span data-bind="meta.author" data-ph="Tu nombre"></span></p>
+  </div>
+  <div class="sticker" aria-hidden="true"><span><b>5</b>etapas de<br>progreso</span></div>
+  <aside class="index-card" aria-label="Índice y rúbrica">
+    <span class="ic-tab">Índice · cómo evaluarlo</span>
+    <div class="ic-body">
+      <h3>Contenido</h3>
+      <ul class="ic-list" id="indexList"></ul>
+      <p class="ic-foot">Pulsa <kbd>P</kbd> para el modo presentación y navega con <kbd>←</kbd> <kbd>→</kbd>. En cada visor: arrastra para orbitar, rueda para zoom.</p>
+    </div>
+  </aside>
+</header>
+
+<!-- ══════════════ 01 · CURADURÍA ══════════════ -->
+<section class="curaduria" id="curaduria" data-step data-label="Curaduría · línea de progreso">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <span class="crit-tag">Criterio 1 · Curaduría</span>
+    <h2>Línea de progreso</h2>
+  </div>
+  <p class="cur-intro" data-bind="meta.curatorial"></p>
+  <div class="cat-filter" id="catFilter" role="group" aria-label="Filtrar piezas por categoría"></div>
+  <div class="ladder" id="ladder"></div>
+  <div class="cur-notes">
+    <p class="margin-note">Cada escalón es un archivo real de mi curso, organizado en Personajes, Animaciones y Escenarios. Uso los filtros para mostrar solo una categoría y hago clic en un escalón para abrir su visor.</p>
+    <p class="margin-note" style="transform:rotate(1.4deg)">Mi hilo conductor: La Llorona en todas las piezas y el mismo flujo (Maya 2027 + HumanIK → FBX), para que mi mejora se lea en el movimiento.</p>
+  </div>
+</section>
+
+<!-- ══════════════ 02–05 · PIEZAS (se generan con JS) ══════════════ -->
+<div id="pieces"></div>
+
+<!-- ══════════════ 06 · ANTES / DESPUÉS ══════════════ -->
+<section class="compare" id="mejoria" data-step data-label="Proceso de mejoría · Task 04 → Task 05">
+  <div class="sec-head">
+    <span class="sec-num" id="numMejoria">06</span>
+    <span class="crit-tag" style="background:var(--rose);color:var(--ink)">Criterio 3 · Proceso iterativo</span>
+    <h2>Proceso de mejoría</h2>
+    <p class="kicker">Task 04 (dos idles iniciales) → Task 05 (idles refinados + idle nuevo)</p>
+  </div>
+  <p class="cmp-intro" data-bind="compare.intro"></p>
+  <p class="cmp-intro"><a class="final-link" href="#p-final-idles">Continúo mi proceso con mis dos idles y mi modelo final</a></p>
+  <div class="cmp-grid">
+    <figure class="cmp-side before"><span class="stamp">Antes <small>Task04FBXTask04.fbx</small></span><div class="viewer-host" id="cmpBefore"></div></figure>
+    <div class="cmp-arrow" aria-hidden="true">→</div>
+    <figure class="cmp-side after"><span class="stamp">Después <small>Task05FBXTask05.fbx</small></span><div class="viewer-host" id="cmpAfter"></div></figure>
+  </div>
+  <div class="cmp-bar" role="group" aria-label="Controles sincronizados">
+    <span class="lbl">Ambos a la vez</span>
+    <button class="iconbtn play" id="cmpPlay" aria-label="Reproducir ambos desde el inicio">▶</button>
+    <button class="iconbtn" id="cmpPause" aria-label="Pausar ambos">❚❚</button>
+    <input type="range" class="scrub" id="cmpScrub" min="0" max="1000" value="0" aria-label="Recorrer ambos (posición relativa)">
+    <div class="seg" id="cmpSpeed"><button data-speed="0.25">0.25×</button><button data-speed="0.5">0.5×</button><button data-speed="1" class="on">1×</button></div>
+    <button class="tool" id="cmpLinkCam" aria-pressed="true">Cámaras vinculadas</button>
+  </div>
+  <div class="cmp-table-wrap">
+    <table class="cmp-table">
+      <thead><tr><th>Criterio</th><th>Antes · Task 04</th><th>Después · Task 05</th></tr></thead>
+      <tbody id="cmpRows"></tbody>
+    </table>
+  </div>
+  <div style="text-align:center"><button class="add edit-only" data-add="compare.rows" data-tpl="row">+ Añadir criterio</button></div>
+  <blockquote class="verdict" data-bind="compare.verdict"></blockquote>
+</section>
+
+<!-- ══════════════ 07 · PIEZAS ADICIONALES ══════════════ -->
+<section class="extras" id="extras" data-step data-label="Piezas adicionales">
+  <div class="sec-head">
+    <span class="sec-num" id="numExtras">07</span>
+    <span class="crit-tag">Hitos de proceso · estáticos o animados</span>
+    <h2>Piezas adicionales</h2>
+  </div>
+  <div class="dropzone">
+    <span class="big">+</span>
+    <p><strong>Sube más .fbx (estáticos o animados).</strong><br><small>Si el nombre coincide con una pieza existente, se re-vincula; si no, se crea una pieza nueva aquí. Se detecta solo si tiene animación.</small></p>
+    <button class="btn hot" id="btnUpload2">+ Subir FBX</button>
+  </div>
+  <div id="extrasList"></div>
+</section>
+
+<!-- ══════════════ 08 · BREAKDOWN ══════════════ -->
+<section class="breakdown" id="breakdown" data-step data-label="Breakdown individual">
+  <div class="sec-head">
+    <span class="sec-num" id="numBreakdown">08</span>
+    <span class="crit-tag">Criterio 2 · Breakdown individual</span>
+    <h2>Qué hice yo y qué no</h2>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="bd-wrap">
+    <div>
+      <table class="bd-table">
+        <thead><tr><th>Área</th><th>Responsable</th><th>Detalle / decisión</th></tr></thead>
+        <tbody id="bdRows"></tbody>
+      </table>
+      <button class="add edit-only" data-add="breakdown" data-tpl="area">+ Añadir área</button>
+    </div>
+    <aside class="bd-summary" id="bdSummary"></aside>
+  </div>
+</section>
+
+<!-- ══════════════ 09 · CRÉDITOS Y CIERRE ══════════════ -->
+<section class="credits" id="creditos" data-step data-label="Créditos y cierre">
+  <div class="sec-head">
+    <span class="sec-num" id="numCreditos">09</span>
+    <span class="crit-tag">Criterio 5 · Créditos y cierre</span>
+    <h2>Créditos y cierre</h2>
+  </div>
+  <div class="cred-grid" id="credGrid"></div>
+  <div class="closing">
+    <blockquote data-bind="meta.closing"></blockquote>
+    <div class="signature"><span data-bind="meta.author" data-ph="Tu nombre"></span><small data-bind="meta.course"></small></div>
+  </div>
+</section>
+
+<footer>
+  <span>dmrq's portfolio · Dulce Margarita Rojas Quintero · Diseño Interactivo, Universidad EAFIT</span>
+  <span>Visor: Three.js r170 · FBXLoader · AnimationMixer · OrbitControls</span>
+  <span>Datos guardados localmente en este navegador · respaldo con Exportar JSON</span>
+</footer>
+
+<!-- HUD del modo presentación -->
+<div class="hud" role="toolbar" aria-label="Modo presentación">
+  <button id="hudPrev" aria-label="Anterior">‹</button>
+  <div class="hud-label" id="hudLabel">—</div>
+  <button id="hudNext" aria-label="Siguiente">›</button>
+  <button class="hud-exit" id="hudExit">Salir (Esc)</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="page-drop" id="pageDrop"><div><h2>Suelta tus .fbx</h2><p>Se asignan por nombre; los nuevos se agregan como piezas adicionales.</p></div></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+/* ══════════════════════════════════════════════════════════════════
+   A. DATOS POR DEFECTO
+   Todo lo editable vive aquí. Los textos marcados como "borrador"
+   (draft) se resaltan en modo edición hasta que los ajustes con lo
+   que realmente hiciste/observaste.
+   ══════════════════════════════════════════════════════════════════ */
+/* Mis archivos viven en ./assets/<categoría>/ (rutas relativas: funcionan en local con servir.ps1 y en el enlace público). */
+const CATS = { personajes: 'Personajes', animaciones: 'Animaciones', escenarios: 'Escenarios' };
+const SKY_URL = './assets/escenarios/cielo_Leyenditas.png';
+let MANIFEST = null; // ./assets/manifest.json → { personajes:[…], animaciones:[…], escenarios:[…] }
+
+/** Rutas candidatas de un archivo: manifiesto → categoría declarada → las tres carpetas → raíz (compatibilidad). */
+function assetCandidates(name, cat) {
+  const out = [];
+  if (MANIFEST) for (const c of Object.keys(CATS)) if ((MANIFEST[c] || []).includes(name)) out.push(`assets/${c}/${name}`);
+  if (cat) out.push(`assets/${cat}/${name}`);
+  Object.keys(CATS).forEach(c => out.push(`assets/${c}/${name}`));
+  out.push(name);
+  return [...new Set(out)];
+}
+function assetURL(rel) { return './' + rel.split('/').map(encodeURIComponent).join('/'); }
+function displayPath(name, cat) { return assetURL(assetCandidates(name, cat)[0]); }
+
+const DEFAULTS = {
+  "version": 5,
+  "meta": {
+    "brand": "dmrq's portfolio",
+    "author": "Dulce Margarita Rojas Quintero",
+    "course": "Animación 3D · Diseño Interactivo · Universidad EAFIT",
+    "term": "Semestre 5 · 2026",
+    "character": "La Llorona",
+    "fps": 24,
+    "intro": "Soy Dulce Margarita Rojas Quintero, estudiante de Diseño Interactivo en la Universidad EAFIT. En mi portafolio reúno mi recorrido en Animación 3D con La Llorona: mi modelo HIGH y mi pose T, mi primera prueba con el proxy, mis dos idles iniciales, su refinamiento con un idle nuevo, mi salto y mi carrera, y mis dos nuevos idles realizados con el modelo final de La Llorona. También muestro mi integración en el escenario. Trabajé en Autodesk Maya 2027 con HumanIK. En cada paso noté una mejora y fui haciendo mis animaciones cada vez más naturales. Comparto mis FBX para revisar mis decisiones en movimiento, en pausa y cuadro a cuadro.",
+    "curatorial": "Elegí los hitos que mejor muestran mi evolución con La Llorona y los organicé en tres categorías. En Personajes presento mi modelo HIGH y mi pose T. En Animaciones recorro mi primera prueba con el proxy (Task 03), mis dos idles iniciales (Task 04), mi refinamiento y mi tercer idle (Task 05), y mi salto y mi carrera. Cierro esta progresión con LLORONA idle.fbx y LLORONA Idle 2.fbx: animé ambos con el modelo final de La Llorona. En cada paso noté una mejora y fui afinando la naturalidad del movimiento. En Escenarios muestro mi integración de Task 05 con su entorno y su cielo. Conservo la identidad de La Llorona y distingo mis pruebas con el proxy de mis dos idles con la malla final.",
+    "closing": "Al reunir mis entregas reconozco mi aprendizaje: partí de mi modelo y mi pose T, probé el movimiento con el proxy, desarrollé mis idles, refiné su continuidad y trasladé lo aprendido a mi salto y mi carrera. Con LLORONA idle.fbx y LLORONA Idle 2.fbx llevé ese recorrido al modelo final de La Llorona. En cada paso noté una mejora y fui haciendo mis animaciones cada vez más naturales. Mi cierre reúne mis archivos reales, mis aportes, mis observaciones y los recursos en los que me apoyé."
+  },
+  "entries": [
+    {
+      "id": "chr",
+      "cat": "personajes",
+      "code": "Personaje",
+      "stage": "Base · Modelo y pose T",
+      "title": "La Llorona: modelo HIGH y pose T",
+      "kicker": "mi punto de partida antes del movimiento",
+      "files": [
+        {
+          "name": "LaLlorona_HIGH.fbx",
+          "label": "Modelo HIGH"
+        },
+        {
+          "name": "LloronaPoseTFBX.fbx",
+          "label": "Pose T"
+        }
+      ],
+      "note": "Aquí muestro a La Llorona como modelo estático: su versión HIGH y la versión en pose T que preparé para el rig. Es el punto de partida de todo mi recorrido; reviso su malla en Sólido, Wireframe y Rayos X para que se vea la topología con la que después animé.",
+      "contribution": "Modelé a La Llorona en Maya, ensamblé sus piezas (cuerpo, vestido, cabello y manos) y limpié su topología para que deformara bien al animar. Después la llevé a pose T para caracterizarla con HumanIK y exporté ambas versiones a FBX.",
+      "iterations": [
+        {
+          "issue": "Mi primera versión del modelo tenía una topología desordenada que deformaba mal en hombros y caderas.",
+          "feedback": "Al probar poses noté pliegues y estiramientos raros justo en las articulaciones.",
+          "fix": "Rehice esas zonas con loops de aristas siguiendo las articulaciones y uní las piezas en una malla más limpia."
+        },
+        {
+          "issue": "Mi modelo todavía no estaba en una pose neutra y eso me complicaba la caracterización.",
+          "feedback": "Al caracterizar mi esqueleto con HumanIK, reconocí que necesitaba una pose T clara.",
+          "fix": "Llevé a La Llorona a pose T con brazos rectos y pies alineados antes de crear el rig."
+        }
+      ]
+    },
+    {
+      "id": "t03",
+      "cat": "animaciones",
+      "code": "Task 03",
+      "stage": "Etapa 1 · Primera prueba",
+      "title": "Primera prueba de animación de La Llorona",
+      "kicker": "mi recorrido del blocking al movimiento",
+      "files": [
+        {
+          "name": "Task03FBXTask03.fbx",
+          "label": "Task 03 · proxy"
+        }
+      ],
+      "note": "Esta es mi primera prueba de animación con La Llorona, hecha sobre su versión proxy (geometría simple por partes) para concentrarme solo en el movimiento. Comparado con mis etapas iniciales de blocking, aquí ya noté una mejoría clara y un movimiento cada vez más natural.",
+      "contribution": "Planteé las poses clave en blocking sobre el control rig HumanIK y después pasé las curvas a spline. Ajusté el timing en el Graph Editor hasta que el movimiento dejó de verse mecánico.",
+      "iterations": [
+        {
+          "issue": "En mi blocking cambiaba las poses de golpe y percibía mi personaje rígido.",
+          "feedback": "Al reproducirlo noté que se percibía robótico: faltaban transiciones entre las poses.",
+          "fix": "Pasé las curvas a spline, añadí poses intermedias y suavicé las tangentes en el Graph Editor."
+        },
+        {
+          "issue": "Mantenía mi cadera casi fija mientras movía brazos y piernas.",
+          "feedback": "Noté que desconectaba mis extremidades del centro de gravedad cuando no acompañaba el gesto con la cadera.",
+          "fix": "Animé primero el efector de la cadera (HipsEffector) y después ajusté extremidades sobre esa base."
+        }
+      ]
+    },
+    {
+      "id": "t04",
+      "cat": "animaciones",
+      "code": "Task 04",
+      "stage": "Etapa 2 · Dos idles",
+      "title": "Dos idles de La Llorona",
+      "kicker": "mi búsqueda de vida en la quietud",
+      "files": [
+        {
+          "name": "Task04FBXTask04.fbx",
+          "label": "Task 04 · 2 idles"
+        }
+      ],
+      "note": "En mi segunda prueba animé 2 idles para La Llorona. Aquí noté una mejoría continua: el personaje empieza a sentirse vivo aunque esté en su sitio, y el movimiento se ve más natural que en mi primera prueba.",
+      "contribution": "Animé dos idles distintos para La Llorona: uno más contenido y otro con más balanceo. Trabajé la respiración, los cambios de peso entre las piernas y pequeños giros de cabeza.",
+      "iterations": [
+        {
+          "issue": "Entre mis gestos dejaba a La Llorona congelada.",
+          "feedback": "Noté que un idle necesita micro-movimiento continuo para no parecer una pose fija.",
+          "fix": "Agregué respiración en el torso y un leve vaivén de cadera que nunca se detiene del todo."
+        },
+        {
+          "issue": "Había dado casi el mismo ritmo a mis dos idles.",
+          "feedback": "Al compararlos noté que perdía personalidad en mis gestos cuando repetía el mismo tempo.",
+          "fix": "Le di a cada idle un tempo distinto: uno pausado y otro con más balanceo lateral."
+        }
+      ]
+    },
+    {
+      "id": "t05",
+      "cat": "animaciones",
+      "code": "Task 05",
+      "stage": "Etapa 3 · Refinamiento",
+      "title": "Idles refinados + un idle nuevo",
+      "kicker": "mi refinamiento y mi nuevo idle",
+      "files": [
+        {
+          "name": "Task05FBXTask05.fbx",
+          "label": "Task 05 · 3 idles"
+        }
+      ],
+      "note": "En esta pieza reuní mis dos idles de Task 04 refinados y un tercer idle de La Llorona. Al comparar mis entregas noté movimientos más fluidos y naturales. Distingo este refinamiento de mis dos idles posteriores, que animé con el modelo final de La Llorona y presento en la etapa 5.",
+      "contribution": "Volví sobre mis dos idles de Task 04 para pulirlos con lo aprendido: corregí el peso, los cierres de loop y la acción secundaria. Además animé un tercer idle desde cero aplicando esas mismas correcciones desde el principio.",
+      "iterations": [
+        {
+          "issue": "En mi Task 04 notaba un pequeño salto al repetir el ciclo.",
+          "feedback": "Al revisar mi cierre, noté que necesitaba continuidad entre mi último cuadro y mi primer cuadro.",
+          "fix": "Igualé poses y tangentes del inicio y del final de cada ciclo."
+        },
+        {
+          "issue": "Repartía mi peso casi por igual entre las dos piernas.",
+          "feedback": "Percibí mi postura plana y poco creíble al no definir una pierna de apoyo.",
+          "fix": "Desplacé el peso hacia una pierna de apoyo, bajé la cadera de ese lado y relajé la rodilla contraria."
+        },
+        {
+          "issue": "Movía mi cabeza y mis brazos al mismo tiempo que mi torso.",
+          "feedback": "Noté rigidez en mi personaje cuando sincronizaba todo como un solo bloque.",
+          "fix": "Desfasé algunos cuadros la cabeza y los brazos (overlap) para que sigan al torso con retraso."
+        }
+      ]
+    },
+    {
+      "id": "loco",
+      "cat": "animaciones",
+      "code": "Locomoción",
+      "stage": "Etapa 4 · Cuerpo completo",
+      "title": "Salto y carrera de La Llorona",
+      "kicker": "mi trabajo de peso, impulso y aterrizaje",
+      "files": [
+        {
+          "name": "Llorona_Jump.fbx",
+          "label": "Jump · salto"
+        },
+        {
+          "name": "Llorona_Run.fbx",
+          "label": "Run · carrera"
+        }
+      ],
+      "note": "Animé el salto (Jump) y la carrera (Run) de La Llorona. Con ellas noté una mejoría adicional: llevé lo que aprendí en los idles sobre peso y timing a un movimiento dinámico de cuerpo completo, que se ve más natural.",
+      "contribution": "Animé el salto por fases (anticipación, impulso, vuelo y aterrizaje) y un ciclo de carrera en loop. Revisé cuadro a cuadro los contactos de los pies y la trayectoria de la cadera.",
+      "iterations": [
+        {
+          "issue": "No transmitía suficiente peso en mi aterrizaje del salto.",
+          "feedback": "Noté que faltaba compresión al tocar el suelo.",
+          "fix": "Marqué más la flexión de rodillas y añadí un pequeño rebote antes de recuperar la pose."
+        },
+        {
+          "issue": "En mi carrera deslizaba los pies sobre el piso.",
+          "feedback": "Al revisar mi apoyo, identifiqué que debía mantener el pie fijo mientras sostenía el peso.",
+          "fix": "Revisé los contactos cuadro a cuadro y ajusté la traslación de la cadera."
+        },
+        {
+          "issue": "Había dejado muy corta mi anticipación del salto.",
+          "feedback": "Al revisar mi impulso, noté que necesitaba preparar mejor la flexión previa.",
+          "fix": "Alargué la flexión previa y acentué el estiramiento en el despegue."
+        }
+      ]
+    },
+    {
+      "id": "final-idles",
+      "cat": "animaciones",
+      "code": "Idles finales",
+      "stage": "Etapa 5 · Mi modelo final",
+      "title": "Mis dos idles con el modelo final de La Llorona",
+      "kicker": "mi aprendizaje llega a la malla final",
+      "files": [
+        {
+          "name": "LLORONA idle.fbx",
+          "label": "Mi idle final · 1"
+        },
+        {
+          "name": "LLORONA Idle 2.fbx",
+          "label": "Mi idle final · 2"
+        }
+      ],
+      "note": "Animé LLORONA idle.fbx y LLORONA Idle 2.fbx utilizando el modelo final de La Llorona. Con estas dos versiones llevé a mi malla final lo que aprendí en mis pruebas anteriores. En cada paso noté una mejora y fui haciendo mis animaciones cada vez más naturales. Reúno ambos archivos en esta etapa para que pueda revisar mi continuidad, mi peso y la lectura de mis gestos sobre el mismo personaje final.",
+      "contribution": "Yo realicé ambas animaciones con el modelo final de La Llorona y exporté cada versión a su propio FBX. En mi primer idle concentré mi revisión en la continuidad de la pose y del movimiento; en mi segundo idle retomé esa revisión para seguir afinando mi naturalidad. Conservo las dos versiones completas y uso las pestañas del visor para alternarlas, pausar mis gestos y recorrer mis cuadros.",
+      "iterations": [
+        {
+          "issue": "Al pasar de mis pruebas al modelo final, necesitaba revisar cómo se leían mis gestos sobre la malla completa.",
+          "feedback": "En mi LLORONA idle.fbx observé mi postura, mi apoyo y la continuidad de mi movimiento con el modelo final de La Llorona.",
+          "fix": "Llevé mi primer idle al modelo final y concentré mi revisión en integrar mis gestos con mayor naturalidad; noté una mejora respecto a mis primeras pruebas."
+        },
+        {
+          "issue": "Después de mi primer idle con el modelo final, todavía quería seguir afinando la naturalidad de mi animación.",
+          "feedback": "Al revisar mi LLORONA Idle 2.fbx junto con mi primera versión, pude observar mi progreso sin cambiar la identidad de mi personaje.",
+          "fix": "Desarrollé mi segundo idle con el modelo final de La Llorona y continué mi revisión del ritmo y de la continuidad. En este paso también noté una mejora y seguí haciendo mi animación más natural."
+        }
+      ]
+    },
+    {
+      "id": "env",
+      "cat": "escenarios",
+      "code": "Escenario",
+      "stage": "Integración · Escena y cielo",
+      "title": "La Llorona integrada en su escenario",
+      "kicker": "mi personaje dentro de su contexto",
+      "envDefault": true,
+      "sky": true,
+      "files": [
+        {
+          "name": "Task05FBXTask05.fbx",
+          "label": "Escena integrada"
+        }
+      ],
+      "note": "Aquí muestro mis idles de Task 05 dentro de mi escena con piso, cerca, pinos y faroles, y con el cielo de mi carpeta de escenarios como fondo. Ver a La Llorona en contexto me ayudó a revisar mi escala, mi apoyo de los pies y la lectura de mi silueta. Presento mis dos idles con el modelo final en su propia etapa, con ambos archivos completos para inspeccionarlos.",
+      "contribution": "Integré a La Llorona en la escena: ajusté su escala y su posición para que los pies apoyaran en el piso, cuidé que la cerca y los pinos no taparan su silueta y elegí el cielo que acompaña la atmósfera de la leyenda. En el visor puedo ocultar el entorno con el botón “Entorno” para revisar solo la animación.",
+      "iterations": [
+        {
+          "issue": "Al integrar a La Llorona en mi escena, percibía sus pies flotando sobre el piso.",
+          "feedback": "Noté de inmediato las separaciones del suelo al revisar mi personaje dentro del entorno.",
+          "fix": "Ajusté la altura de la cadera y revisé los contactos para que el apoyo se leyera firme."
+        },
+        {
+          "issue": "En mi encuadre, los pinos y la cerca competían con mi personaje.",
+          "feedback": "Al revisar mi composición, decidí dar prioridad a la silueta de La Llorona.",
+          "fix": "Reubiqué la cámara y el personaje para dejarla despejada al frente, con el entorno como fondo."
+        }
+      ]
+    }
+  ],
+  "extras": [],
+  "compare": {
+    "before": "Task04FBXTask04.fbx",
+    "after": "Task05FBXTask05.fbx",
+    "intro": "Aquí comparo mis mismos dos idles de La Llorona antes (Task 04) y después de refinarlos (Task 05), que además incluye un idle nuevo. Recomiendo reproducirlos sincronizados a 0.25× o recorrerlos con la barra para ver, pose a pose, cómo mejoré el peso, el equilibrio, el timing y la naturalidad. Continúo mi recorrido en la etapa 5 con mis dos idles hechos con el modelo final de La Llorona; así puedo distinguir mi refinamiento de Task 04 a Task 05 de mi aplicación posterior sobre la malla final.",
+    "rows": [
+      {
+        "criterion": "Cambio de peso",
+        "before": "Repartía mi peso casi igual entre las dos piernas y percibía mi postura plana.",
+        "after": "Desplacé el peso a una pierna de apoyo: la cadera baja de ese lado y la otra rodilla se relaja."
+      },
+      {
+        "criterion": "Equilibrio",
+        "before": "No compensaba la posición de mi cadera con mi torso.",
+        "after": "Contrarresté la inclinación de mi cadera con mi torso y mis hombros para sostener mejor mi pose."
+      },
+      {
+        "criterion": "Timing y espaciado",
+        "before": "Mantenía mi ritmo uniforme, sin acentos.",
+        "after": "Combiné movimientos lentos con pequeños acentos que rompen la monotonía."
+      },
+      {
+        "criterion": "Fluidez del loop",
+        "before": "Notaba el punto en el que repetía mi ciclo.",
+        "after": "Igualé mi inicio y mi final para suavizar la repetición de cada ciclo."
+      },
+      {
+        "criterion": "Acción secundaria",
+        "before": "Movía mi cabeza y mis brazos en bloque con mi torso.",
+        "after": "Agregué un leve desfase (overlap) en cabeza y brazos que suaviza todo el cuerpo."
+      },
+      {
+        "criterion": "Naturalidad general",
+        "before": "Percibía mi animación como una pose que respira.",
+        "after": "Percibí más vida en mi Llorona y sumé mi tercer idle aplicando mis mejoras desde el inicio."
+      }
+    ],
+    "verdict": "En Task 05 conservé la intención de mis idles originales, pero los hice más vivos y naturales: donde más se nota mi refinamiento es en el peso, el equilibrio y la continuidad del ciclo."
+  },
+  "breakdown": [
+    {
+      "area": "Modelado, ensamblaje y topología de La Llorona",
+      "who": "yo",
+      "detail": "Modelé a La Llorona en Maya, ensamblé sus piezas y limpié su topología para que deformara bien. Exporté la versión HIGH y la de pose T."
+    },
+    {
+      "area": "Versión proxy para animar",
+      "who": "yo",
+      "detail": "Preparé una versión proxy (geometría por partes) para animar con fluidez y revisar el movimiento sin el peso de la malla final."
+    },
+    {
+      "area": "Rigging y caracterización HumanIK",
+      "who": "yo",
+      "detail": "Armé el esqueleto y caractericé a La Llorona con HumanIK en Maya 2027 desde su pose T. Animé con su control rig (efectores Ctrl_*)."
+    },
+    {
+      "area": "Materiales",
+      "who": "decidi",
+      "detail": "Elegí materiales neutros (standardSurface y lambert) para que la lectura se centre en el movimiento."
+    },
+    {
+      "area": "Animación · Task 03 (prueba con el proxy)",
+      "who": "yo",
+      "detail": "Hice el blocking, los intermedios y el paso a spline, y ajusté el timing en el Graph Editor."
+    },
+    {
+      "area": "Animación · 2 idles (Task 04)",
+      "who": "yo",
+      "detail": "Animé dos idles con respiración, cambios de peso y giros de cabeza."
+    },
+    {
+      "area": "Pulido + idle nuevo (Task 05)",
+      "who": "yo",
+      "detail": "Refiné peso, loops y overlap de los dos idles, y animé un tercer idle desde cero."
+    },
+    {
+      "area": "Locomoción · Jump y Run",
+      "who": "yo",
+      "detail": "Animé el salto por fases y el ciclo de carrera, con contactos revisados cuadro a cuadro."
+    },
+    {
+      "area": "Mi idle 1 · modelo final de La Llorona",
+      "who": "yo",
+      "detail": "Animé LLORONA idle.fbx con el modelo final de La Llorona. Apliqué mi aprendizaje previo y revisé mi postura y mi continuidad para seguir mejorando la naturalidad de mi animación."
+    },
+    {
+      "area": "Mi idle 2 · modelo final de La Llorona",
+      "who": "yo",
+      "detail": "Animé LLORONA Idle 2.fbx con el modelo final de La Llorona. Continué mi revisión del ritmo y de mis gestos; noté una nueva mejora en mi proceso y seguí afinando la naturalidad."
+    },
+    {
+      "area": "Integración en el escenario",
+      "who": "yo",
+      "detail": "Ubiqué y escalé a La Llorona dentro de la escena, revisé el apoyo de los pies y la lectura de su silueta frente al entorno."
+    },
+    {
+      "area": "Geometría del escenario (piso, cerca, pinos, faroles)",
+      "who": "base",
+      "detail": "La usé como recurso base de contexto. En el visor puedo mostrarla u ocultarla con el botón “Entorno”."
+    },
+    {
+      "area": "Cielo del escenario",
+      "who": "decidi",
+      "detail": "Elegí el cielo de mi carpeta de escenarios (cielo_Leyenditas.png) como fondo de la pieza de integración."
+    },
+    {
+      "area": "Exportación FBX y organización de archivos",
+      "who": "yo",
+      "detail": "Exporté mis 9 archivos FBX desde Maya y los organicé en mis carpetas de personajes y animaciones. Incluí LLORONA idle.fbx y LLORONA Idle 2.fbx, ambos animados con el modelo final de La Llorona, y conservé mi cielo en escenarios."
+    },
+    {
+      "area": "Curaduría, textos y narrativa",
+      "who": "yo",
+      "detail": "Elegí las piezas, definí el orden de la progresión y las categorías, y redacté todo el contenido."
+    },
+    {
+      "area": "Programación del visor web",
+      "who": "apoyo",
+      "detail": "Preparé mi visor web con asistencia de IA: me apoyé en Claude para su programación y en Codex para integrar mis dos idles con el modelo final y revisar su funcionamiento. Yo definí mi diseño y mis contenidos."
+    }
+  ],
+  "credits": {
+    "tools": [
+      {
+        "name": "Autodesk Maya 2027",
+        "detail": "Lo usé para modelar, hacer mi rig, animar y exportar mis 9 archivos FBX, incluidos mis dos idles con el modelo final de La Llorona."
+      },
+      {
+        "name": "HumanIK (Maya)",
+        "detail": "Lo usé para caracterizar a La Llorona y animar con su control rig."
+      },
+      {
+        "name": "Three.js r170 (licencia MIT)",
+        "detail": "Hice el visor web con FBXLoader, AnimationMixer y OrbitControls."
+      },
+      {
+        "name": "Google Fonts (licencia OFL)",
+        "detail": "Elegí Fraunces, Shantell Sans, Instrument Sans y JetBrains Mono para dar carácter a mi portafolio y mantener legibles mis textos."
+      },
+      {
+        "name": "Claude (Anthropic)",
+        "detail": "Me apoyé en esta IA para programar el visor web."
+      },
+      {
+        "name": "Codex (OpenAI)",
+        "detail": "Me apoyé en esta IA para integrar mis dos idles con el modelo final de La Llorona, actualizar mis textos y comprobar mi visor y mis rutas."
+      }
+    ],
+    "sources": [
+      {
+        "name": "La Llorona · modelo y rig",
+        "detail": "Los hice yo en Maya 2027 (LaLlorona_HIGH.fbx y LloronaPoseTFBX.fbx). En Task 03 el proxy aparece con el nombre “Demo_proxy”, y en Jump y Run como “Llorona_Proxy”."
+      },
+      {
+        "name": "Mis dos idles · modelo final de La Llorona",
+        "detail": "Yo animé LLORONA idle.fbx y LLORONA Idle 2.fbx con el modelo final de La Llorona. En cada paso noté una mejora y continué afinando la naturalidad de mis animaciones."
+      },
+      {
+        "name": "Escenario de Task 04 / 05",
+        "detail": "Usé como recurso base de contexto el piso, la cerca, los pinos y los faroles incluidos en esos FBX."
+      },
+      {
+        "name": "Cielo del escenario",
+        "detail": "Usé cielo_Leyenditas.png, que conservé en mi carpeta de escenarios en Google Drive."
+      },
+      {
+        "name": "Personaje y contexto",
+        "detail": "Mi personaje es La Llorona, figura de la tradición oral latinoamericana: una de nuestras leyendas."
+      }
+    ],
+    "references": [
+      {
+        "name": "Thomas & Johnston — The Illusion of Life (1981)",
+        "detail": "De aquí tomé los principios que apliqué: anticipación, timing, arcos y acción secundaria."
+      },
+      {
+        "name": "Richard Williams — The Animator's Survival Kit (2001)",
+        "detail": "Consulté esta referencia para trabajar el peso en mis idles y mis ciclos de carrera y salto."
+      }
+    ],
+    "people": [
+      {
+        "name": "Dulce Margarita Rojas Quintero",
+        "detail": "Hice el modelado, el rig, la animación, la curaduría y la presentación de La Llorona."
+      },
+      {
+        "name": "Docente y grupo de Animación 3D · EAFIT",
+        "detail": "Me apoyé en las observaciones de mi docente y mi grupo durante mis iteraciones en clase."
+      }
+    ]
+  },
+  "segments": {},
+  "_drafts": []
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   B. ESTADO + PERSISTENCIA (localStorage para metadatos)
+   ══════════════════════════════════════════════════════════════════ */
+const LS_KEY = 'portafolioFBX.datos.v5';
+const LEGACY_KEY = 'portafolioFBX.datos.v4';
+const INITIAL_KEY = 'portafolioFBX.datos.v3';
+const PREVIOUS_COPY = {
+  "Soy Dulce Margarita Rojas Quintero, estudiante de Diseño Interactivo en la Universidad EAFIT. En este portafolio reúno mi recorrido en Animación 3D con un solo personaje: La Llorona. Primero muestro su modelo (versión HIGH y pose T), después mi primera prueba de animación, mis dos idles, su versión refinada con un idle nuevo, su salto y su carrera, y por último la integré en un escenario. Todo lo trabajé en Autodesk Maya 2027 con un rig HumanIK. Cada pieza es el archivo FBX real que entregué: se puede girar, pausar y revisar cuadro a cuadro. En cada etapa noté una mejoría concreta y fui haciendo mis animaciones cada vez más naturales.": "Soy Dulce Margarita Rojas Quintero, estudiante de Diseño Interactivo en la Universidad EAFIT. En mi portafolio reúno mi recorrido en Animación 3D con La Llorona: mi modelo HIGH y mi pose T, mi primera prueba con el proxy, mis dos idles iniciales, su refinamiento con un idle nuevo, mi salto y mi carrera, y mis dos nuevos idles realizados con el modelo final de La Llorona. También muestro mi integración en el escenario. Trabajé en Autodesk Maya 2027 con HumanIK. En cada paso noté una mejora y fui haciendo mis animaciones cada vez más naturales. Comparto mis FBX para revisar mis decisiones en movimiento, en pausa y cuadro a cuadro.",
+  "No quise acumular archivos: elegí los hitos que mejor muestran cómo avancé con La Llorona y los organicé en tres categorías. En Personajes muestro su modelo estático, la base de todo lo demás. En Animaciones sigo mi progresión: una primera prueba (Task 03), dos idles (Task 04), esos mismos idles refinados más uno nuevo (Task 05) y, al final, su salto y su carrera, donde el peso, el timing y los arcos se ponen a prueba en todo el cuerpo. En Escenarios la integro en una escena con su entorno y su cielo. Mantuve el mismo personaje en todas las piezas para que mi mejora se lea en el movimiento y no en un cambio de modelo.": "Elegí los hitos que mejor muestran mi evolución con La Llorona y los organicé en tres categorías. En Personajes presento mi modelo HIGH y mi pose T. En Animaciones recorro mi primera prueba con el proxy (Task 03), mis dos idles iniciales (Task 04), mi refinamiento y mi tercer idle (Task 05), y mi salto y mi carrera. Cierro esta progresión con LLORONA idle.fbx y LLORONA Idle 2.fbx: animé ambos con el modelo final de La Llorona. En cada paso noté una mejora y fui afinando la naturalidad del movimiento. En Escenarios muestro mi integración de Task 05 con su entorno y su cielo. Conservo la identidad de La Llorona y distingo mis pruebas con el proxy de mis dos idles con la malla final.",
+  "Al mirar todas las etapas juntas veo mi propia curva de aprendizaje: pasé de un modelo en pose T a poses rígidas, de ahí a idles que respiran y cambian el peso, y finalmente a un salto y una carrera con impulso y aterrizaje creíbles, integrados en un escenario. En cada entrega noté una mejoría concreta y fui refinando la naturalidad de mis animaciones. Este portafolio documenta ese proceso, mis decisiones y lo que aprendí animando a La Llorona.": "Al reunir mis entregas reconozco mi aprendizaje: partí de mi modelo y mi pose T, probé el movimiento con el proxy, desarrollé mis idles, refiné su continuidad y trasladé lo aprendido a mi salto y mi carrera. Con LLORONA idle.fbx y LLORONA Idle 2.fbx llevé ese recorrido al modelo final de La Llorona. En cada paso noté una mejora y fui haciendo mis animaciones cada vez más naturales. Mi cierre reúne mis archivos reales, mis aportes, mis observaciones y los recursos en los que me apoyé.",
+  "antes de moverse, tenía que existir": "mi punto de partida antes del movimiento",
+  "El modelo no estaba en una pose neutra, lo que complicaba la caracterización.": "Mi modelo todavía no estaba en una pose neutra y eso me complicaba la caracterización.",
+  "HumanIK necesita una pose T clara para mapear bien el esqueleto.": "Al caracterizar mi esqueleto con HumanIK, reconocí que necesitaba una pose T clara.",
+  "del blocking al primer movimiento": "mi recorrido del blocking al movimiento",
+  "En el blocking las poses cambiaban de golpe y el cuerpo se veía rígido.": "En mi blocking cambiaba las poses de golpe y percibía mi personaje rígido.",
+  "La cadera se quedaba casi fija mientras se movían brazos y piernas.": "Mantenía mi cadera casi fija mientras movía brazos y piernas.",
+  "El movimiento debe nacer del centro de gravedad; si la cadera no acompaña, todo se ve desconectado.": "Noté que desconectaba mis extremidades del centro de gravedad cuando no acompañaba el gesto con la cadera.",
+  "estar viva sin moverse del sitio": "mi búsqueda de vida en la quietud",
+  "Entre un gesto y otro el personaje se quedaba congelado.": "Entre mis gestos dejaba a La Llorona congelada.",
+  "Los dos idles tenían casi el mismo ritmo.": "Había dado casi el mismo ritmo a mis dos idles.",
+  "Si los dos laten igual, no se distinguen y se pierde personalidad.": "Al compararlos noté que perdía personalidad en mis gestos cuando repetía el mismo tempo.",
+  "pulir lo anterior, sumar lo nuevo": "mi refinamiento y mi nuevo idle",
+  "Esta pieza contiene los mismos 2 idles de Task 04, ya refinados, más 1 idle nuevo de La Llorona. Para mí es la prueba más clara de mi progresión: los mismos movimientos se ven más fluidos, con más peso y mucho más naturales.": "En esta pieza reuní mis dos idles de Task 04 refinados y un tercer idle de La Llorona. Al comparar mis entregas noté movimientos más fluidos y naturales. Distingo este refinamiento de mis dos idles posteriores, que animé con el modelo final de La Llorona y presento en la etapa 5.",
+  "En Task 04 se notaba un pequeño salto cuando el ciclo se repetía.": "En mi Task 04 notaba un pequeño salto al repetir el ciclo.",
+  "Un loop debe cerrar sin “pop” entre el último y el primer cuadro.": "Al revisar mi cierre, noté que necesitaba continuidad entre mi último cuadro y mi primer cuadro.",
+  "El peso se repartía casi igual entre las dos piernas.": "Repartía mi peso casi por igual entre las dos piernas.",
+  "Sin una pierna de apoyo clara, la postura se ve plana y poco creíble.": "Percibí mi postura plana y poco creíble al no definir una pierna de apoyo.",
+  "Cabeza y brazos se movían al mismo tiempo que el torso.": "Movía mi cabeza y mis brazos al mismo tiempo que mi torso.",
+  "Todo en sincronía se siente rígido, como un bloque.": "Noté rigidez en mi personaje cuando sincronizaba todo como un solo bloque.",
+  "peso, impulso y aterrizaje": "mi trabajo de peso, impulso y aterrizaje",
+  "El aterrizaje del salto no transmitía peso.": "No transmitía suficiente peso en mi aterrizaje del salto.",
+  "En la carrera los pies se deslizaban sobre el piso.": "En mi carrera deslizaba los pies sobre el piso.",
+  "El pie de apoyo debe quedar fijo mientras soporta el peso.": "Al revisar mi apoyo, identifiqué que debía mantener el pie fijo mientras sostenía el peso.",
+  "La anticipación del salto era muy corta.": "Había dejado muy corta mi anticipación del salto.",
+  "Sin una buena preparación, el impulso no se siente creíble.": "Al revisar mi impulso, noté que necesitaba preparar mejor la flexión previa.",
+  "el personaje dentro de un lugar": "mi personaje dentro de su contexto",
+  "Aquí muestro mis idles finales de La Llorona dentro de su escena (piso, cerca, pinos y faroles) y con el cielo de mi carpeta de escenarios como fondo. Verla en contexto me ayudó a revisar escala, apoyo de los pies y lectura de la silueta contra el entorno.": "Aquí muestro mis idles de Task 05 dentro de mi escena con piso, cerca, pinos y faroles, y con el cielo de mi carpeta de escenarios como fondo. Ver a La Llorona en contexto me ayudó a revisar mi escala, mi apoyo de los pies y la lectura de mi silueta. Presento mis dos idles con el modelo final en su propia etapa, con ambos archivos completos para inspeccionarlos.",
+  "Al meterla en la escena, los pies parecían flotar sobre el piso.": "Al integrar a La Llorona en mi escena, percibía sus pies flotando sobre el piso.",
+  "Con un entorno alrededor cualquier separación del suelo se nota de inmediato.": "Noté de inmediato las separaciones del suelo al revisar mi personaje dentro del entorno.",
+  "Los pinos y la cerca competían visualmente con el personaje.": "En mi encuadre, los pinos y la cerca competían con mi personaje.",
+  "La silueta de La Llorona debe leerse primero.": "Al revisar mi composición, decidí dar prioridad a la silueta de La Llorona.",
+  "Aquí comparo mis mismos dos idles de La Llorona antes (Task 04) y después de refinarlos (Task 05), que además incluye un idle nuevo. Recomiendo reproducirlos sincronizados a 0.25× o recorrerlos con la barra para ver, pose a pose, cómo mejoré el peso, el equilibrio, el timing y la naturalidad.": "Aquí comparo mis mismos dos idles de La Llorona antes (Task 04) y después de refinarlos (Task 05), que además incluye un idle nuevo. Recomiendo reproducirlos sincronizados a 0.25× o recorrerlos con la barra para ver, pose a pose, cómo mejoré el peso, el equilibrio, el timing y la naturalidad. Continúo mi recorrido en la etapa 5 con mis dos idles hechos con el modelo final de La Llorona; así puedo distinguir mi refinamiento de Task 04 a Task 05 de mi aplicación posterior sobre la malla final.",
+  "Mi peso se repartía casi igual entre las dos piernas; la postura se veía plana.": "Repartía mi peso casi igual entre las dos piernas y percibía mi postura plana.",
+  "El torso no compensaba la posición de la cadera.": "No compensaba la posición de mi cadera con mi torso.",
+  "El torso y los hombros contrarrestan la inclinación de la cadera, así que la pose se sostiene y se ve estable.": "Contrarresté la inclinación de mi cadera con mi torso y mis hombros para sostener mejor mi pose.",
+  "El ritmo era bastante uniforme, sin acentos.": "Mantenía mi ritmo uniforme, sin acentos.",
+  "Se notaba el punto donde el ciclo se repetía.": "Notaba el punto en el que repetía mi ciclo.",
+  "Cada ciclo cierra sin saltos: el loop es casi imperceptible.": "Igualé mi inicio y mi final para suavizar la repetición de cada ciclo.",
+  "Cabeza y brazos se movían en bloque con el torso.": "Movía mi cabeza y mis brazos en bloque con mi torso.",
+  "Se leía como una pose que respira.": "Percibía mi animación como una pose que respira.",
+  "La Llorona se siente viva y presente; además sumé un tercer idle con estas mejoras desde el inicio.": "Percibí más vida en mi Llorona y sumé mi tercer idle aplicando mis mejoras desde el inicio.",
+  "Exporté mis 7 archivos desde Maya (FBX binario) y los organicé en assets/personajes, assets/animaciones y assets/escenarios.": "Exporté mis 9 archivos FBX desde Maya y los organicé en mis carpetas de personajes y animaciones. Incluí LLORONA idle.fbx y LLORONA Idle 2.fbx, ambos animados con el modelo final de La Llorona, y conservé mi cielo en escenarios.",
+  "Programé el visor con asistencia de IA (Claude). Yo definí el diseño y los contenidos, y verifiqué que mis archivos funcionen.": "Preparé mi visor web con asistencia de IA: me apoyé en Claude para su programación y en Codex para integrar mis dos idles con el modelo final y revisar su funcionamiento. Yo definí mi diseño y mis contenidos.",
+  "Lo usé para modelar, hacer el rigging, animar y exportar mis 7 archivos FBX.": "Lo usé para modelar, hacer mi rig, animar y exportar mis 9 archivos FBX, incluidos mis dos idles con el modelo final de La Llorona.",
+  "Las tipografías son Fraunces, Shantell Sans, Instrument Sans y JetBrains Mono.": "Elegí Fraunces, Shantell Sans, Instrument Sans y JetBrains Mono para dar carácter a mi portafolio y mantener legibles mis textos.",
+  "cielo_Leyenditas.png, tomado de mi carpeta de escenarios en Google Drive.": "Usé cielo_Leyenditas.png, que conservé en mi carpeta de escenarios en Google Drive.",
+  "Fue mi referencia para el peso en los idles y para los ciclos de carrera y salto.": "Consulté esta referencia para trabajar el peso en mis idles y mis ciclos de carrera y salto.",
+  "Sus observaciones en clase me guiaron en cada iteración.": "Me apoyé en las observaciones de mi docente y mi grupo durante mis iteraciones en clase."
+};
+const LS_NOTICE = 'portafolioFBX.aviso.cerrado';
+const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+
+/** Mezcla datos guardados sobre los valores por defecto (los arrays guardados reemplazan a los de fábrica). */
+function mergeDeep(base, over) {
+  if (!isObj(over)) return base;
+  for (const k of Object.keys(over)) {
+    if (isObj(base[k]) && isObj(over[k])) mergeDeep(base[k], over[k]);
+    else base[k] = over[k];
+  }
+  return base;
+}
+function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch { /* almacenamiento bloqueado: seguimos sin persistir */ } }
+
+function loadData() {
+  const raw = lsGet(LS_KEY) || lsGet(LEGACY_KEY) || lsGet(INITIAL_KEY);
+  const base = structuredClone(DEFAULTS);
+  if (!raw) return base;
+  try { return upgradeData(JSON.parse(raw)); } catch { return base; }
+}
+/** Upgrades old browser/imported data without losing custom text, segments or uploaded FBX. */
+function upgradeData(saved) {
+  const legacy = Number(saved.version || 0) < DEFAULTS.version;
+  const refresh = value => {
+    if (typeof value === 'string') return PREVIOUS_COPY[value] ?? value;
+    if (Array.isArray(value)) return value.map(refresh);
+    if (isObj(value)) return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, refresh(v)]));
+    return value;
+  };
+  const state = mergeDeep(structuredClone(DEFAULTS), legacy ? refresh(saved) : saved);
+  const finalPiece = DEFAULTS.entries.find(e => e.id === 'final-idles');
+  if (!state.entries.some(e => e.id === finalPiece.id)) {
+    const at = state.entries.findIndex(e => e.id === 'env');
+    state.entries.splice(at < 0 ? state.entries.length : at, 0, structuredClone(finalPiece));
+  }
+  const finalNames = new Set(finalPiece.files.map(f => f.name.toLowerCase()));
+  state.extras = state.extras.filter(e => !e.files.every(f => finalNames.has(f.name.toLowerCase())));
+  for (const row of DEFAULTS.breakdown.filter(b => b.area.startsWith('Mi idle '))) {
+    if (!state.breakdown.some(b => b.area === row.area)) state.breakdown.push(structuredClone(row));
+  }
+  for (const key of ['tools', 'sources']) {
+    for (const credit of DEFAULTS.credits[key].filter(c => c.name === 'Codex (OpenAI)' || c.name.startsWith('Mis dos idles'))) {
+      if (!state.credits[key].some(c => c.name === credit.name)) state.credits[key].push(structuredClone(credit));
+    }
+  }
+  // Mantengo actualizados mis créditos también al abrir respaldos o datos anteriores.
+  const finalCredit = DEFAULTS.credits.sources.find(c => c.name.startsWith('Mis dos idles'));
+  state.credits.sources = state.credits.sources.map(c => c.name === finalCredit.name ? structuredClone(finalCredit) : c);
+  state.version = DEFAULTS.version;
+  return state;
+}
+let data = loadData();
+let saveTimer = 0;
+function save() {
+  clearTimeout(saveTimer);
+  // las piezas detectadas desde ./assets (auto) no se guardan: se vuelven a leer del manifiesto
+  saveTimer = setTimeout(() => lsSet(LS_KEY, JSON.stringify({ ...data, extras: data.extras.filter(e => !e.auto) })), 250);
+}
+
+/** Lectura/escritura por ruta "entries.0.title" */
+function getPath(obj, path) { return path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj); }
+function setPath(obj, path, val) {
+  const ks = path.split('.'); const last = ks.pop();
+  const parent = ks.reduce((o, k) => o[k], obj); parent[last] = val;
+}
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const fmtMB = b => b ? (b / 1048576).toFixed(2) + ' MB' : '—';
+
+function toast(msg, ms = 3200) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), ms);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   C. INDEXEDDB — guarda los .fbx subidos para no volver a cargarlos
+   ══════════════════════════════════════════════════════════════════ */
+const IDB = (() => {
+  let dbp = null;
+  function open() {
+    if (dbp) return dbp;
+    dbp = new Promise((res, rej) => {
+      try {
+        const r = indexedDB.open('portafolioFBX', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('files', { keyPath: 'key' });
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error);
+      } catch (e) { rej(e); }
+    });
+    return dbp;
+  }
+  async function tx(mode, fn) {
+    const db = await open();
+    return new Promise((res, rej) => {
+      const t = db.transaction('files', mode); const st = t.objectStore('files');
+      const req = fn(st); t.oncomplete = () => res(req?.result); t.onerror = () => rej(t.error);
+    });
+  }
+  return {
+    get: k => tx('readonly', s => s.get(k)).catch(() => null),
+    put: rec => tx('readwrite', s => s.put(rec)),
+    del: k => tx('readwrite', s => s.delete(k)).catch(() => null),
+    keys: () => tx('readonly', s => s.getAllKeys()).catch(() => []),
+    clear: () => tx('readwrite', s => s.clear()).catch(() => null)
+  };
+})();
+
+const IS_HTTP = location.protocol.startsWith('http');
+const bufferCache = new Map();   // clave de archivo → Promise<{buffer,size,source,fileName}>
+const statsStore = {};           // clave de archivo → estadísticas del modelo cargado
+const availability = {};         // clave → 'navegador' | 'carpeta' | null
+
+/**
+ * Obtiene el .fbx: 1) guardado en este navegador (IndexedDB) → 2) la carpeta del sitio
+ * (solo si se sirve por http/https; con doble clic el navegador no deja leer la carpeta).
+ */
+function getFBX(key) {
+  if (bufferCache.has(key)) return bufferCache.get(key);
+  const p = (async () => {
+    const rec = await IDB.get(key);
+    if (rec && rec.blob) return { buffer: await rec.blob.arrayBuffer(), size: rec.size, source: 'navegador', fileName: rec.name };
+    if (IS_HTTP) {
+      const slot = allSlots().find(s => s.key === key);
+      for (const rel of assetCandidates(key, slot?.cat)) {
+        try {
+          const r = await fetch(assetURL(rel), { cache: 'no-cache' });
+          if (r.ok && !/text\/html/i.test(r.headers.get('content-type') || '')) {
+            const buffer = await r.arrayBuffer(); return { buffer, size: buffer.byteLength, source: 'carpeta', fileName: rel };
+          }
+        } catch { /* sin acceso a esta ruta: probamos la siguiente */ }
+      }
+    }
+    return null;
+  })();
+  bufferCache.set(key, p);
+  p.then(v => { if (!v) bufferCache.delete(key); });
+  return p;
+}
+async function saveFile(key, file) {
+  await IDB.put({ key, name: file.name, size: file.size, blob: file, savedAt: Date.now() });
+  bufferCache.delete(key); availability[key] = 'navegador';
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   D. VISOR FBX (Three.js)
+   Una instancia por pieza. Sólo renderiza cuando está en pantalla.
+   ══════════════════════════════════════════════════════════════════ */
+const viewers = new Set();
+const viewerByEl = new WeakMap();
+const clock = new THREE.Clock();
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) {
+    const v = viewerByEl.get(e.target); if (!v) continue;
+    v.visible = e.isIntersecting;
+    if (v.visible && !v.started) { v.started = true; v.loadSlot(v.slotIndex); }
+  }
+}, { rootMargin: '250px 0px' });
+
+// Textura blanca 1×1 para reemplazar texturas externas que no vienen incrustadas en el FBX
+// (evita peticiones 404 y errores en consola).
+const WHITE_PX = (() => { const c = document.createElement('canvas'); c.width = c.height = 1; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 1, 1); return c.toDataURL(); })();
+
+const MAT_WIRE = new THREE.MeshBasicMaterial({ color: 0x6e1230, wireframe: true });
+const MAT_XRAY = new THREE.MeshBasicMaterial({ color: 0xb3264f, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
+
+class Viewer {
+  /**
+   * @param {HTMLElement} host  contenedor
+   * @param {{slots:{key:string,label:string}[], compact?:boolean}} opts
+   */
+  constructor(host, { slots, compact = false, envDefault = false, sky = false }) {
+    this.host = host; this.slots = slots; this.compact = compact; this.envDefault = envDefault; this.sky = sky;
+    this.slotIndex = 0; this.mode = 'solid'; this.loop = true; this.speed = 1;
+    this.playing = true; this.started = false; this.visible = false;
+    this.range = null; this.segStart = null; this.lightAz = 0.6;
+    this.loadToken = 0; this.linked = null; this.syncing = false;
+    this.buildDOM(); this.initThree(); this.bindUI();
+    viewerByEl.set(this.el, this); io.observe(this.el); viewers.add(this);
+  }
+
+  get key() { return this.slots[this.slotIndex].key; }
+
+  buildDOM() {
+    const tabs = this.slots.length > 1
+      ? `<div class="vw-tabs" role="tablist">${this.slots.map((s, i) => `<button role="tab" data-slot="${i}" class="${i === 0 ? 'on' : ''}">${esc(s.label)}</button>`).join('')}</div>` : '';
+    this.el = document.createElement('div');
+    this.el.className = 'viewer';
+    this.el.innerHTML = `${tabs}
+      <div class="vw-stage">
+        <div class="vw-canvas"></div>
+        <div class="vw-badges"><span class="badge kind" hidden></span><span class="badge light fname-badge"></span></div>
+        <div class="vw-tools" hidden>
+          <div class="seg" role="group" aria-label="Modo de malla">
+            <button data-mode="solid" class="on">Sólido</button><button data-mode="wire">Wireframe</button><button data-mode="xray">Rayos X</button>
+          </div>
+          <button class="tool" data-act="skel" aria-pressed="false">Esqueleto</button>
+          <button class="tool" data-act="fit">Encuadrar</button>
+          <button class="tool" data-act="env" aria-pressed="false" hidden title="Mostrar u ocultar el escenario que viene en el FBX">Entorno</button>
+          <button class="tool anim-only" data-act="follow" aria-pressed="false" title="La cámara sigue la cadera (útil en salto/carrera con desplazamiento)">Seguir</button>
+          <button class="tool" data-act="rotate" aria-pressed="false">Girar</button>
+          <label class="tool lightctl">Luz <input type="range" min="0" max="360" value="35" data-act="light" aria-label="Ángulo de la luz principal"></label>
+          <button class="tool" data-act="full" aria-label="Pantalla completa" title="Pantalla completa">⤢</button>
+        </div>
+        <div class="vw-empty" hidden>
+          <div class="card">
+            <h4>Archivo sin vincular</h4>
+            <div class="fname"></div>
+            <small class="why"></small>
+            <p class="err" hidden></p>
+            <p style="margin:12px 0 0"><button class="btn hot" data-act="relink">Elegir archivo…</button></p>
+            <small>o arrastra el .fbx sobre este recuadro</small>
+          </div>
+        </div>
+        <div class="vw-loading" hidden><span class="spinner"></span>Cargando FBX…</div>
+        <div class="vw-drop" hidden>Suelta para vincular este archivo</div>
+      </div>
+      <div class="vw-anim" hidden>
+        <select class="clip" aria-label="Clip de animación"></select>
+        <select class="segsel" aria-label="Tramo"></select>
+        <button class="tool edit-only" data-act="segadd" title="Marca inicio y luego fin del tramo en la posición actual">Marcar tramo</button>
+        <button class="tool edit-only" data-act="segdel" title="Eliminar el tramo seleccionado">Quitar tramo</button>
+        <button class="iconbtn play" data-act="play" aria-label="Reproducir / pausar">❚❚</button>
+        <button class="iconbtn" data-act="reset" aria-label="Reiniciar al inicio">↺</button>
+        <input type="range" class="scrub" min="0" max="1000" value="0" aria-label="Línea de tiempo">
+        <span class="time">0.00 s · f 0</span>
+        <div class="seg speed" role="group" aria-label="Velocidad"><button data-speed="0.25">0.25×</button><button data-speed="0.5">0.5×</button><button data-speed="1" class="on">1×</button></div>
+        <button class="tool" data-act="loop" aria-pressed="true">Loop</button>
+      </div>
+      <div class="vw-static" hidden>Modelo estático · orbita con el ratón, cambia la luz e inspecciona la malla en Sólido / Wireframe / Rayos X.</div>
+      <input type="file" accept=".fbx" hidden class="relink-input">`;
+    this.host.append(this.el);
+    this.q = s => this.el.querySelector(s);
+  }
+
+  initThree() {
+    const r = this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    r.outputColorSpace = THREE.SRGBColorSpace;
+    r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.q('.vw-canvas').append(r.domElement);
+
+    const scene = this.scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf8e3e8);
+    if (this.sky && IS_HTTP) { // Con doble clic conservo el fondo rosa y evito una petición file:// bloqueada por CORS.
+      new THREE.TextureLoader().load(SKY_URL, tex => { tex.colorSpace = THREE.SRGBColorSpace; scene.background = tex; }, undefined, () => {});
+    }
+    this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 5000);
+    const c = this.controls = new OrbitControls(this.camera, r.domElement);
+    c.enableDamping = true; c.dampingFactor = 0.08; c.autoRotateSpeed = 1.2;
+
+    // Iluminación de estudio: hemisférica + key (con sombra) + rim rosado + relleno
+    this.hemi = new THREE.HemisphereLight(0xfff3f5, 0x7a2a40, 1.5);
+    this.keyLight = new THREE.DirectionalLight(0xfff1ea, 2.5);
+    this.keyLight.castShadow = true; this.keyLight.shadow.mapSize.set(1024, 1024);
+    this.keyLight.shadow.bias = -0.0004; this.keyLight.shadow.normalBias = 0.02;
+    this.rim = new THREE.DirectionalLight(0xff9fbb, 1.8);
+    this.fill = new THREE.DirectionalLight(0xffe4ec, 0.55);
+    scene.add(this.hemi, this.keyLight, this.keyLight.target, this.rim, this.rim.target, this.fill);
+
+    // Escenario: disco rosa + sombra + retícula sutil
+    this.disc = new THREE.Mesh(new THREE.CircleGeometry(1, 72), new THREE.MeshBasicMaterial({ color: 0xf1c8d2 }));
+    this.disc.rotation.x = -Math.PI / 2;
+    this.shadowFloor = new THREE.Mesh(new THREE.CircleGeometry(1, 72), new THREE.ShadowMaterial({ color: 0x5a0f24, opacity: 0.22 }));
+    this.shadowFloor.rotation.x = -Math.PI / 2; this.shadowFloor.receiveShadow = true;
+    this.grid = new THREE.GridHelper(2, 24, 0xb3264f, 0xe5a3b5);
+    this.grid.material.transparent = true; this.grid.material.opacity = 0.35;
+    scene.add(this.disc, this.shadowFloor, this.grid);
+
+    this.root = new THREE.Group(); scene.add(this.root);
+    this.size = new THREE.Vector3(100, 170, 100); this.radius = 100;
+    this.layoutStage();
+
+    new ResizeObserver(() => this.resize()).observe(this.q('.vw-canvas'));
+    this.resize();
+  }
+
+  resize() {
+    const st = this.q('.vw-canvas'); const w = st.clientWidth, h = st.clientHeight;
+    if (!w || !h) return;
+    this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
+    if (this.started && !this.visible) this.renderer.render(this.scene, this.camera);
+  }
+
+  /** Escala piso, luces y sombra al tamaño del modelo (los FBX de Maya suelen venir en cm). */
+  layoutStage() {
+    const r = this.radius, h = this.size.y;
+    const floorR = Math.max(r * 2.4, h * 0.9);
+    this.disc.scale.setScalar(floorR); this.disc.position.y = -0.002 * r;
+    this.shadowFloor.scale.setScalar(floorR);
+    this.grid.scale.setScalar(floorR); this.grid.position.y = -0.001 * r;
+    const a = this.lightAz, d = Math.max(r, h) * 2.2;
+    this.keyLight.position.set(Math.sin(a) * d, d * 1.1, Math.cos(a) * d);
+    this.keyLight.target.position.set(0, h * 0.4, 0);
+    this.rim.position.set(-Math.sin(a) * d, d * 0.7, -Math.cos(a) * d);
+    this.rim.target.position.set(0, h * 0.5, 0);
+    this.fill.position.set(-Math.cos(a) * d, d * 0.3, Math.sin(a) * d);
+    const sc = this.keyLight.shadow.camera, s = Math.max(r, h) * 1.4;
+    sc.left = -s; sc.right = s; sc.top = s; sc.bottom = -s; sc.near = d * 0.1; sc.far = d * 4;
+    sc.updateProjectionMatrix();
+  }
+
+  bindUI() {
+    const el = this.el;
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b || !el.contains(b)) return;
+      if (b.dataset.slot != null) return this.loadSlot(+b.dataset.slot);
+      if (b.dataset.mode) return this.setMode(b.dataset.mode);
+      if (b.dataset.speed) return this.setSpeed(+b.dataset.speed);
+      switch (b.dataset.act) {
+        case 'skel': this.skelOn = !this.skelOn; b.setAttribute('aria-pressed', this.skelOn); this.updateSkel(); break;
+        case 'fit': this.fit(); break;
+        case 'env':
+          this.envOn = !this.envOn; b.setAttribute('aria-pressed', this.envOn);
+          (this.envMeshes || []).forEach(m => m.visible = this.envOn);
+          this.disc.visible = this.grid.visible = !this.envOn; break;
+        case 'follow': this.follow = !this.follow; b.setAttribute('aria-pressed', this.follow); break;
+        case 'rotate': this.controls.autoRotate = !this.controls.autoRotate; b.setAttribute('aria-pressed', this.controls.autoRotate); break;
+        case 'full': this.toggleFull(); break;
+        case 'play': this.playing ? this.pause() : this.play(); break;
+        case 'reset': this.setTime(this.range ? this.range.start : 0); break;
+        case 'loop': this.setLoop(!this.loop); break;
+        case 'relink': this.q('.relink-input').click(); break;
+        case 'segadd': this.markSegment(b); break;
+        case 'segdel': this.deleteSegment(); break;
+      }
+    });
+    this.q('[data-act=light]').addEventListener('input', e => { this.lightAz = (+e.target.value) * Math.PI / 180; this.layoutStage(); paintRange(e.target); });
+    paintRange(this.q('[data-act=light]'));
+    this.q('.clip').addEventListener('change', e => this.selectClip(+e.target.value));
+    this.q('.segsel').addEventListener('change', e => this.selectSegment(e.target.value));
+    const scrub = this.q('.scrub');
+    scrub.addEventListener('pointerdown', () => { this.scrubbing = true; this.wasPlaying = this.playing; this.pause(); });
+    scrub.addEventListener('input', () => this.setNormalized(+scrub.value / 1000));
+    const endScrub = () => { if (this.scrubbing) { this.scrubbing = false; if (this.wasPlaying) this.play(); } };
+    scrub.addEventListener('pointerup', endScrub); scrub.addEventListener('change', endScrub);
+    this.q('.relink-input').addEventListener('change', async e => {
+      const f = e.target.files[0]; e.target.value = ''; if (f) await this.acceptFile(f);
+    });
+    // Arrastrar un .fbx sobre el visor lo vincula a ESTA pieza
+    const stage = this.q('.vw-stage'), drop = this.q('.vw-drop');
+    stage.addEventListener('dragover', e => { if (hasFiles(e)) { e.preventDefault(); e.stopPropagation(); drop.hidden = false; hidePageDrop(); } });
+    stage.addEventListener('dragleave', () => { drop.hidden = true; });
+    stage.addEventListener('drop', async e => {
+      if (!hasFiles(e)) return; e.preventDefault(); e.stopPropagation(); drop.hidden = true; hidePageDrop();
+      const f = [...e.dataTransfer.files].find(f => /\.fbx$/i.test(f.name));
+      if (!f) return toast('Solo se aceptan archivos .fbx');
+      await this.acceptFile(f);
+    });
+    this.controls.addEventListener('change', () => {
+      if (this.linked && !this.syncing && this.linked.enabled()) this.linked.other.copyCamera(this);
+    });
+    document.addEventListener('fullscreenchange', () => this.resize());
+  }
+
+  async acceptFile(f) {
+    if (!/\.fbx$/i.test(f.name)) return toast('Solo se aceptan archivos .fbx');
+    await saveFile(this.key, f);
+    toast(`“${f.name}” vinculado a ${this.slots[this.slotIndex].label} y guardado en este navegador`);
+    reloadKey(this.key);
+  }
+
+  /* ---------- Carga ---------- */
+  async loadSlot(i) {
+    this.slotIndex = i; this.started = true;
+    $$('.vw-tabs button', this.el).forEach((b, j) => b.classList.toggle('on', j === i));
+    const slot = this.slots[i]; const token = ++this.loadToken;
+    this.q('.fname-badge').textContent = slot.key;
+    this.q('.vw-empty').hidden = true; this.q('.vw-loading').hidden = false;
+    try {
+      const res = await getFBX(slot.key);
+      if (token !== this.loadToken) return;
+      if (!res) { this.showEmpty(); return; }
+      this.applyBuffer(res);
+    } catch (err) {
+      if (token !== this.loadToken) return;
+      console.warn('[Visor] No se pudo leer', slot.key, err);
+      this.showEmpty(String(err && err.message || err));
+    } finally {
+      if (token === this.loadToken) this.q('.vw-loading').hidden = true;
+    }
+  }
+
+  showEmpty(errMsg) {
+    this.clearModel();
+    availability[this.key] = null;
+    const card = this.q('.vw-empty'); card.hidden = false;
+    this.q('.vw-tools').hidden = true; this.q('.vw-anim').hidden = true; this.q('.vw-static').hidden = true;
+    this.q('.kind').hidden = true;
+    card.querySelector('.fname').textContent = this.key;
+    card.querySelector('.why').textContent = IS_HTTP
+      ? 'No se encontró en la carpeta del sitio ni en este navegador.'
+      : 'Al abrir la página con doble clic, el navegador no puede leer la carpeta por seguridad. Vincúlalo una vez: queda guardado en este navegador.';
+    const er = card.querySelector('.err'); er.hidden = !errMsg; er.textContent = errMsg ? 'Error: ' + errMsg : '';
+    showNotice();
+    if (this.started) this.renderer.render(this.scene, this.camera);
+  }
+
+  clearModel() {
+    if (this.mixer) { this.mixer.stopAllAction(); this.mixer = null; }
+    this.action = null; this.clips = []; this.range = null;
+    if (this.skelHelper) { this.scene.remove(this.skelHelper); this.skelHelper.dispose?.(); this.skelHelper = null; }
+    if (this.model) {
+      this.root.remove(this.model);
+      this.model.traverse(o => {
+        if (o.isMesh) {
+          o.geometry?.dispose();
+          [].concat(o.userData.orig || o.material).forEach(m => { if (m && m !== MAT_WIRE && m !== MAT_XRAY) { m.map?.dispose(); m.dispose(); } });
+        }
+      });
+      this.model = null;
+    }
+  }
+
+  /** Parsea el FBX, detecta si es animado o estático y prepara todo. */
+  applyBuffer(res) {
+    this.clearModel();
+    const missing = new Set();
+    const manager = new THREE.LoadingManager();
+    manager.setURLModifier(url => {
+      if (/^(blob:|data:)/.test(url)) return url;              // texturas incrustadas: OK
+      missing.add(decodeURIComponent(url.split(/[\\/]/).pop())); // externas: se reemplazan
+      return WHITE_PX;
+    });
+    const obj = new FBXLoader(manager).parse(res.buffer, '');
+
+    const meshes = [], bones = new Set(), mats = new Set(); let verts = 0, tris = 0;
+    obj.traverse(o => {
+      if (o.isBone) bones.add(o);
+      if (!o.isMesh) return;
+      meshes.push(o); o.castShadow = true; o.receiveShadow = true;
+      if (o.isSkinnedMesh) { o.frustumCulled = false; o.skeleton.bones.forEach(b => bones.add(b)); }
+      const g = o.geometry, pc = g.attributes.position ? g.attributes.position.count : 0;
+      verts += pc; tris += g.index ? g.index.count / 3 : pc / 3;
+      [].concat(o.material).forEach(m => {
+        if (!m) return; mats.add(m);
+        // Algunos materiales exportados desde Maya llegan con opacidad 0: se corrige
+        if (m.opacity < 0.05) { m.opacity = 1; m.transparent = false; }
+        if (m.map) m.map.colorSpace = THREE.SRGBColorSpace;
+      });
+      o.userData.orig = o.material;
+    });
+    this.model = obj; this.meshes = meshes;
+    this.root.add(obj);
+
+    // Animación: un FBX es "animado" si trae clips con duración y pistas
+    // Se descartan pistas vacías o incompletas (p. ej. la cámara "ubercam" que Maya exporta sin claves)
+    (obj.animations || []).forEach(c => {
+      const n = c.tracks.length;
+      c.tracks = c.tracks.filter(t => t.times.length > 0 && t.values.length >= t.times.length * t.getValueSize());
+      if (c.tracks.length !== n) c.resetDuration();
+    });
+    this.clips = (obj.animations || []).filter(c => c.duration > 1e-4 && c.tracks.length);
+    // Uso mis etiquetas editoriales para los clips de cualquier FBX, incluidos los subidos.
+    this.clips.forEach((clip, index) => {
+      clip.name = this.slots[this.slotIndex].label + (this.clips.length > 1 ? ` · Clip ${index + 1}` : '');
+    });
+    this.animated = this.clips.length > 0;
+    if (this.animated) {
+      this.mixer = new THREE.AnimationMixer(obj);
+      this.mixer.timeScale = this.speed;
+      this.mixer.addEventListener('finished', () => { if (!this.range) { this.playing = false; this.syncPlayBtn(); } });
+      this.selectClip(0, true);
+    }
+    this.hips = null;
+    obj.traverse(o => { if (!this.hips && o.isBone && /hips|pelvis|root/i.test(o.name)) this.hips = o; });
+    if (!this.hips && bones.size) this.hips = [...bones][0];
+
+    // Encuadre: se mide la caja en varias poses a lo largo del clip (el personaje puede
+    // agacharse, saltar o estirarse), se centra en la pose inicial y se apoya en el piso.
+    // Personaje = mallas con skin o colgadas de nodos animados; el resto es entorno (piso, cerca, pinos…)
+    const animNodes = new Set();
+    this.clips.forEach(c => c.tracks.forEach(t => animNodes.add(t.name.split('.')[0])));
+    const isChar = m => { if (m.isSkinnedMesh) return true; for (let o = m; o; o = o.parent) if (animNodes.has(o.name)) return true; return false; };
+    let charMeshes = meshes.filter(isChar);
+    if (!charMeshes.length || charMeshes.length === meshes.length) charMeshes = meshes;
+    this.envMeshes = meshes.filter(m => !charMeshes.includes(m));
+    const measure = () => {
+      obj.updateMatrixWorld(true);
+      const b = new THREE.Box3();
+      charMeshes.forEach(m => { if (m.isSkinnedMesh) { m.skeleton.update(); m.computeBoundingBox?.(); } b.expandByObject(m); });
+      return b;
+    };
+    const box0 = measure(), box = box0.clone(), floors = [box0.min.y];
+    if (this.animated) {
+      const N = 16, dur = this.clip.duration;
+      for (let i = 1; i <= N; i++) { this.action.time = dur * i / N; this.mixer.update(0); const b = measure(); box.union(b); floors.push(b.min.y); }
+      this.action.time = 0; this.mixer.update(0);
+    }
+    if (box.isEmpty() || !isFinite(box.min.x)) { box.set(new THREE.Vector3(-50, 0, -50), new THREE.Vector3(50, 170, 50)); box0.copy(box); }
+    // piso = mediana del punto más bajo de cada pose (robusto ante un primer cuadro distinto)
+    floors.sort((a, b) => a - b);
+    const floorY = isFinite(floors[0]) ? floors[Math.floor(floors.length / 2)] : box.min.y;
+    const ctr = box0.getCenter(new THREE.Vector3());
+    obj.position.x -= ctr.x; obj.position.z -= ctr.z; obj.position.y -= floorY;
+    box.min.y = floorY;
+    this.size = box.getSize(new THREE.Vector3());
+    // si hay desplazamiento (salto/carrera), el ancho del encuadre usa la pose inicial
+    const s0 = box0.getSize(new THREE.Vector3());
+    this.size.x = Math.min(this.size.x, Math.max(s0.x, this.size.y)); this.size.z = Math.min(this.size.z, Math.max(s0.z, this.size.y));
+    this.radius = Math.max(this.size.x, this.size.y, this.size.z) * 0.5 || 50;
+
+    if (bones.size) {
+      this.skelHelper = new THREE.SkeletonHelper(obj);
+      this.skelHelper.material.vertexColors = false; this.skelHelper.material.color.set(0x3b0a1a);
+      this.skelHelper.material.depthTest = false; this.skelHelper.renderOrder = 10;
+      this.scene.add(this.skelHelper);
+    }
+
+    // Si el FBX trae su propio escenario, se oculta el disco/retícula del visor para no duplicar piso
+    const hasEnv = this.envMeshes.length > 0;
+    // (oculto por defecto para que la cerca y los pinos no tapen al personaje; botón "Entorno" lo muestra)
+    this.envOn = hasEnv && this.envDefault; // la pieza de Escenarios lo muestra desde el inicio
+    this.envMeshes.forEach(m => m.visible = this.envOn);
+    this.disc.visible = this.grid.visible = !this.envOn;
+    const envBtn = this.q('[data-act=env]'); envBtn.hidden = !hasEnv; envBtn.setAttribute('aria-pressed', String(this.envOn));
+
+    this.layoutStage(); this.fit(); this.setMode(this.mode); this.updateSkel();
+
+    // UI según tipo
+    const kind = this.q('.kind'); kind.hidden = false;
+    if (this.animated) {
+      kind.className = 'badge kind';
+      kind.textContent = `Animado · ${this.clips.length} clip${this.clips.length > 1 ? 's' : ''} · ${this.clips[0].duration.toFixed(2)} s`;
+    } else {
+      kind.className = 'badge kind static'; kind.textContent = 'Modelo Estático';
+    }
+    this.q('.vw-anim').hidden = !this.animated;
+    this.q('.vw-static').hidden = this.animated;
+    $$('.anim-only', this.el).forEach(b => b.hidden = !this.animated);
+    this.q('.vw-tools').hidden = false; this.q('.vw-empty').hidden = true;
+    this.fillClipSelect(); this.refreshSegments();
+
+    // Estadísticas para la ficha técnica y los créditos
+    statsStore[this.key] = {
+      verts, tris: Math.round(tris), bones: bones.size, meshes: meshes.length, materials: mats.size, env: this.envMeshes.length,
+      clips: this.clips.map(c => ({ name: c.name, duration: c.duration })), animated: this.animated,
+      size: res.size || res.buffer.byteLength, source: res.source, fileName: res.fileName, missingTex: [...missing]
+    };
+    availability[this.key] = res.source;
+    onStatsChanged();
+  }
+
+  /** Encadra la cámara al personaje. */
+  fit() {
+    const h = this.size.y || 170, r = this.radius;
+    const fov = this.camera.fov * Math.PI / 180;
+    const dist = Math.max(h * 0.55, r * 0.9) / Math.tan(fov / 2) * 1.12;
+    this.camera.near = dist / 200; this.camera.far = dist * 60; this.camera.updateProjectionMatrix();
+    this.controls.target.set(0, h * 0.48, 0);
+    const dir = new THREE.Vector3(0.45, 0.16, 1).normalize();
+    this.camera.position.copy(this.controls.target).addScaledVector(dir, dist);
+    this.controls.minDistance = dist * 0.12; this.controls.maxDistance = dist * 6;
+    this.controls.update();
+  }
+
+  copyCamera(from) {
+    this.syncing = true;
+    this.camera.position.copy(from.camera.position); this.controls.target.copy(from.controls.target);
+    this.controls.update(); this.syncing = false;
+  }
+
+  /* ---------- Inspección de malla ---------- */
+  setMode(m) {
+    this.mode = m;
+    $$('[data-mode]', this.el).forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+    (this.meshes || []).forEach(mesh => {
+      const orig = mesh.userData.orig;
+      const rep = m === 'wire' ? MAT_WIRE : m === 'xray' ? MAT_XRAY : null;
+      mesh.material = rep ? (Array.isArray(orig) ? orig.map(() => rep) : rep) : orig;
+      mesh.castShadow = m === 'solid';
+    });
+    this.updateSkel();
+  }
+  updateSkel() { if (this.skelHelper) this.skelHelper.visible = !!this.skelOn || this.mode === 'xray'; }
+
+  /* ---------- Animación ---------- */
+  fillClipSelect() {
+    const sel = this.q('.clip');
+    sel.innerHTML = this.clips.map((c, i) => `<option value="${i}">Clip ${i + 1} · ${esc(c.name || 'sin nombre')} (${c.duration.toFixed(1)} s)</option>`).join('');
+    sel.hidden = this.clips.length < 2;
+  }
+  selectClip(i, initial = false) {
+    if (!this.mixer) return;
+    this.mixer.stopAllAction();
+    this.clip = this.clips[i];
+    this.action = this.mixer.clipAction(this.clip);
+    this.action.clampWhenFinished = true;
+    this.action.setLoop(this.loop ? THREE.LoopRepeat : THREE.LoopOnce, Infinity);
+    this.action.reset().play();
+    this.range = null; this.q('.segsel').value = '';
+    if (initial) this.playing = true;
+    this.mixer.update(0); this.syncPlayBtn(); this.updateTimeUI();
+    if (!initial) { const k = this.q('.kind'); k.textContent = `Animado · ${this.clips.length} clip${this.clips.length > 1 ? 's' : ''} · ${this.clip.duration.toFixed(2)} s`; }
+  }
+  bounds() { return this.range ? [this.range.start, Math.min(this.range.end, this.clip.duration)] : [0, this.clip ? this.clip.duration : 0]; }
+  setTime(t) {
+    if (!this.action) return;
+    const [a, b] = this.bounds();
+    this.action.time = Math.min(Math.max(t, a), b);
+    this.action.paused = false; this.action.enabled = true;
+    this.mixer.update(0); this.updateTimeUI();
+  }
+  setNormalized(p) { const [a, b] = this.bounds(); this.setTime(a + (b - a) * Math.min(Math.max(p, 0), 1)); }
+  play() {
+    if (!this.action) return;
+    const [a, b] = this.bounds();
+    if (this.action.time >= b - 1e-3) this.setTime(a);
+    this.action.paused = false; this.action.enabled = true; this.playing = true; this.syncPlayBtn();
+  }
+  pause() { this.playing = false; this.syncPlayBtn(); }
+  setSpeed(s) {
+    this.speed = s; if (this.mixer) this.mixer.timeScale = s;
+    $$('.speed [data-speed]', this.el).forEach(b => b.classList.toggle('on', +b.dataset.speed === s));
+  }
+  setLoop(on) {
+    this.loop = on; this.q('[data-act=loop]').setAttribute('aria-pressed', on);
+    if (this.action) this.action.setLoop(on ? THREE.LoopRepeat : THREE.LoopOnce, Infinity);
+  }
+  syncPlayBtn() {
+    const b = this.q('[data-act=play]'); b.textContent = this.playing ? '❚❚' : '▶';
+    b.setAttribute('aria-label', this.playing ? 'Pausar' : 'Reproducir');
+  }
+  updateTimeUI() {
+    if (!this.action) return;
+    const [a, b] = this.bounds(); const t = this.action.time;
+    const p = b > a ? (t - a) / (b - a) : 0;
+    const s = this.q('.scrub');
+    if (!this.scrubbing) s.value = Math.round(p * 1000);
+    s.style.setProperty('--p', (p * 100).toFixed(1) + '%');
+    const fps = +data.meta.fps || 24;
+    this.q('.time').textContent = `${t.toFixed(2)} s · f ${Math.round(t * fps)}`;
+  }
+
+  /* ---------- Tramos con nombre (p. ej. Idle 1 / Idle 2 / Idle 3) ---------- */
+  segments() { return data.segments[this.key] || []; }
+  refreshSegments() {
+    const sel = this.q('.segsel'); const segs = this.segments(); const cur = sel.value;
+    sel.innerHTML = `<option value="">Clip completo</option>` + segs.map((s, i) => `<option value="${i}">${esc(s.name)} (${s.start.toFixed(1)}–${s.end.toFixed(1)} s)</option>`).join('');
+    sel.value = segs[cur] ? cur : '';
+    sel.hidden = !segs.length && !document.body.classList.contains('editing');
+    if (sel.value === '') this.range = null;
+  }
+  selectSegment(v) {
+    const s = this.segments()[v]; this.range = s ? { start: s.start, end: s.end } : null;
+    this.setTime(this.range ? this.range.start : 0);
+  }
+  markSegment(btn) {
+    if (!this.action) return;
+    if (this.segStart == null) {
+      this.segStart = this.action.time; btn.textContent = `Fin del tramo (inicio ${this.segStart.toFixed(2)} s)`;
+      toast('Inicio marcado. Lleva la barra al final del tramo y pulsa de nuevo.');
+      return;
+    }
+    const a = Math.min(this.segStart, this.action.time), b = Math.max(this.segStart, this.action.time);
+    this.segStart = null; btn.textContent = 'Marcar tramo';
+    if (b - a < 0.05) return toast('El tramo es demasiado corto.');
+    const n = this.segments().length + 1;
+    const name = (prompt('Nombre del tramo', `Idle ${n}`) || '').trim() || `Tramo ${n}`;
+    (data.segments[this.key] ||= []).push({ name, start: +a.toFixed(3), end: +b.toFixed(3) });
+    save(); viewers.forEach(v => { if (v.key === this.key) v.refreshSegments(); });
+    toast(`Tramo “${name}” guardado`);
+  }
+  deleteSegment() {
+    const v = this.q('.segsel').value; if (v === '') return toast('Selecciona primero un tramo.');
+    this.segments().splice(+v, 1); save();
+    viewers.forEach(x => { if (x.key === this.key) x.refreshSegments(); });
+  }
+
+  toggleFull() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else this.el.requestFullscreen?.().catch(() => toast('Pantalla completa no disponible'));
+  }
+
+  /** Se llama en cada frame desde el bucle global. */
+  tick(dt) {
+    const full = document.fullscreenElement === this.el;
+    if (!this.started || !(this.visible || full)) return;
+    if (this.mixer && this.action) {
+      if (this.playing && !this.scrubbing) {
+        this.mixer.update(dt);
+        if (this.range) { // mantener la reproducción dentro del tramo
+          const [a, b] = this.bounds();
+          if (this.action.time >= b) {
+            if (this.loop) this.action.time = a + ((this.action.time - b) % Math.max(b - a, 1e-3));
+            else { this.action.time = b; this.playing = false; this.syncPlayBtn(); }
+            this.mixer.update(0);
+          } else if (this.action.time < a - 1e-3) { this.action.time = a; this.mixer.update(0); }
+        }
+      }
+      this.updateTimeUI();
+    }
+    if (this.follow && this.hips) { // la cámara acompaña a la cadera en XZ
+      const hp = this.hips.getWorldPosition(new THREE.Vector3());
+      const d = new THREE.Vector3(hp.x - this.controls.target.x, 0, hp.z - this.controls.target.z).multiplyScalar(0.12);
+      this.controls.target.add(d); this.camera.position.add(d);
+    }
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  dispose() {
+    viewers.delete(this); io.unobserve(this.el); this.clearModel();
+    this.controls.dispose(); this.renderer.dispose(); this.renderer.forceContextLoss?.(); this.el.remove();
+  }
+}
+
+function paintRange(inp) { const p = (inp.value - inp.min) / (inp.max - inp.min) * 100; inp.style.setProperty('--p', p + '%'); }
+
+(function loop() {
+  requestAnimationFrame(loop);
+  const dt = Math.min(clock.getDelta(), 0.1);
+  for (const v of viewers) v.tick(dt);
+})();
+
+function reloadKey(key) {
+  bufferCache.delete(key);
+  viewers.forEach(v => { if (v.key === key && v.started) v.loadSlot(v.slotIndex); });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   E. RENDER DE SECCIONES
+   ══════════════════════════════════════════════════════════════════ */
+const WHO = {
+  yo: 'Hecho por mí', decidi: 'Decidido / ajustado por mí', apoyo: 'Apoyo / colaboración', base: 'Recurso base', pendiente: 'Por confirmar'
+};
+const WHO_ORDER = Object.keys(WHO);
+const TPL = {
+  iteration: () => ({ issue: '', feedback: '', fix: '' }),
+  row: () => ({ criterion: '', before: '', after: '' }),
+  area: () => ({ area: '', who: 'pendiente', detail: '' }),
+  credit: () => ({ name: '', detail: '' })
+};
+
+/** Todas las ranuras de archivo (piezas fijas + adicionales). */
+function allSlots() {
+  const out = [];
+  data.entries.forEach((e, i) => e.files.forEach(f => out.push({ key: f.name, label: f.label, entry: e, cat: e.cat, path: `entries.${i}` })));
+  data.extras.forEach((e, i) => e.files.forEach(f => out.push({ key: f.name, label: f.label, entry: e, cat: e.cat, path: `extras.${i}`, extra: true })));
+  return out;
+}
+/** Archivos únicos (Task05 aparece en dos piezas). */
+const uniqueFiles = () => { const seen = new Set(); return allSlots().filter(s => !seen.has(s.key) && seen.add(s.key)); };
+/** Adivina la categoría de un .fbx nuevo por su nombre. */
+const guessCat = n => /env|escen|bosque|cielo|scene|stage/i.test(n) ? 'escenarios' : /jump|run|walk|idle|anim|task|cycle|salto|carrera/i.test(n) ? 'animaciones' : 'personajes';
+let catFilter = 'todo';
+
+const pieceViewers = new Map(); // id de pieza → Viewer
+
+/** Crea (una sola vez) la sección y el visor de cada pieza. */
+function buildPiece(entry, container, numLabel, flip) {
+  const sec = document.createElement('section');
+  sec.className = 'piece' + (flip ? ' flip' : '');
+  sec.id = 'p-' + entry.id;
+  sec.dataset.step = ''; sec.dataset.label = `${entry.code} · ${entry.title}`;
+  sec.innerHTML = `
+    <div class="piece-num" aria-hidden="true">${esc(numLabel)}</div>
+    <div class="piece-grid">
+      <div class="piece-stage">
+        <span class="rot-tag"></span>
+        <div class="viewer-host"></div>
+        <div class="path-ref"></div>
+      </div>
+      <div class="piece-text"></div>
+    </div>`;
+  container.append(sec);
+  sec.dataset.cat = entry.cat || 'animaciones';
+  const v = new Viewer(sec.querySelector('.viewer-host'), { slots: entry.files.map(f => ({ key: f.name, label: f.label })), envDefault: !!entry.envDefault, sky: !!entry.sky });
+  pieceViewers.set(entry.id, v);
+  return sec;
+}
+
+function pieceTextHTML(entry, path, idx, total, isExtra) {
+  const iters = entry.iterations || [];
+  return `
+    <div class="folder-tab">${esc(entry.code)} <span>· ${esc(CATS[entry.cat] || 'Pieza')} · ${idx}/${total}</span></div>
+    <div class="ptext-card">
+      ${entry.id === 'final-idles' ? '<p><span class="crit-tag">Criterio 4 · Mi presentación profesional</span></p>' : ''}
+      ${isExtra ? `<button class="rm edit-only" data-rm-extra="${esc(entry.id)}" title="Quitar esta pieza" style="top:10px;right:10px">×</button>` : ''}
+      <p class="kicker" data-bind="${path}.kicker" data-ph="Frase corta (opcional)"></p>
+      <h2 class="ptitle" data-bind="${path}.title" data-ph="Título"></h2>
+      <p class="mono stage-line" data-bind="${path}.stage" data-ph="Etapa"></p>
+      <p class="note" data-bind="${path}.note" data-ph="Nota de progresión: qué muestra esta pieza y qué mejoró"></p>
+      <div class="mine"><span class="mine-label">Mi aporte en esta pieza</span><p data-bind="${path}.contribution" data-ph="Qué hiciste tú, concretamente"></p></div>
+      <div class="iter">
+        <h3>Problema → Observación → Mejora</h3>
+        <ol class="iter-list">${iters.map((it, i) => `
+          <li data-item="${path}.iterations.${i}">
+            <div><b>Problema</b><p data-bind="${path}.iterations.${i}.issue" data-ph="Qué fallaba"></p></div>
+            <div><b>Observación</b><p data-bind="${path}.iterations.${i}.feedback" data-ph="Feedback recibido / lo que noté"></p></div>
+            <div><b>Mejora</b><p data-bind="${path}.iterations.${i}.fix" data-ph="Qué cambié"></p></div>
+            <button class="rm edit-only" data-rm="${path}.iterations" data-i="${i}" title="Quitar">×</button>
+          </li>`).join('')}
+        </ol>
+        <button class="add edit-only" data-add="${path}.iterations" data-tpl="iteration">+ Añadir iteración</button>
+      </div>
+      <div class="ficha" data-ficha="${path}"></div>
+    </div>`;
+}
+
+function fichaHTML(entry) {
+  return entry.files.map(f => {
+    const s = statsStore[f.name];
+    const head = `<h4>Ficha técnica · ${esc(f.name)}</h4>`;
+    if (!s) return head + `<p class="wait">${availability[f.name] === null ? 'Archivo sin vincular: súbelo para ver sus datos reales.' : 'Se calcula al cargar el visor…'}</p>`;
+    const clips = s.clips.length ? s.clips.map(c => `${esc(c.name || 'clip')} · ${c.duration.toFixed(2)} s`).join('<br>') : '—';
+    return head + `<dl>
+      <div><dt>Tipo</dt><dd>${s.animated ? 'Animado' : 'Estático'}</dd></div>
+      <div><dt>Vértices</dt><dd>${s.verts.toLocaleString('es')}</dd></div>
+      <div><dt>Triángulos</dt><dd>${s.tris.toLocaleString('es')}</dd></div>
+      <div><dt>Huesos</dt><dd>${s.bones}</dd></div>
+      <div><dt>Mallas / mat.</dt><dd>${s.meshes} / ${s.materials}</dd></div>
+      <div><dt>Peso</dt><dd>${fmtMB(s.size)}</dd></div>
+      ${s.env ? `<div><dt>Escenario</dt><dd>${s.env} mallas</dd></div>` : ''}
+      <div style="grid-column:1/-1"><dt>Clips</dt><dd>${clips}</dd></div>
+      ${s.missingTex.length ? `<div style="grid-column:1/-1"><dt>Texturas externas no incrustadas</dt><dd>${s.missingTex.map(esc).join(', ')}</dd></div>` : ''}
+    </dl>`;
+  }).join('');
+}
+
+function renderPieces() {
+  const total = data.entries.length;
+  data.entries.forEach((e, i) => {
+    const sec = $('#p-' + e.id); if (!sec) return;
+    sec.dataset.label = `${e.code} · ${e.title}`;
+    sec.querySelector('.rot-tag').textContent = `${e.code} · ${e.files.map(f => f.label).join(' + ')}`;
+    sec.querySelector('.path-ref').innerHTML = e.files.map(f => `<b>Mi archivo:</b> <a href="${esc(displayPath(f.name, e.cat))}" download>${esc(displayPath(f.name, e.cat))}</a>`).join('<br>');
+    sec.querySelector('.piece-text').innerHTML = pieceTextHTML(e, `entries.${i}`, i + 1, total, false);
+    sec.querySelector('.ficha').innerHTML = fichaHTML(e);
+  });
+  data.extras.forEach((e, i) => {
+    const sec = $('#p-' + e.id); if (!sec) return;
+    sec.querySelector('.rot-tag').textContent = `${e.code} · ${e.files[0].name}`;
+    sec.querySelector('.path-ref').innerHTML = e.auto ? `<b>Archivo:</b> ${esc(displayPath(e.files[0].name, e.cat))}` : `<b>Archivo:</b> ${esc(e.files[0].name)} (guardado en este navegador)`;
+    sec.querySelector('.piece-text').innerHTML = pieceTextHTML(e, `extras.${i}`, i + 1, data.extras.length, true);
+    sec.querySelector('.ficha').innerHTML = fichaHTML(e);
+  });
+}
+
+const pad = n => String(n).padStart(2, '0');
+function renderIndex() {
+  const n = data.entries.length;
+  const N = { mej: n + 2, ext: n + 3, bd: n + 3 + (data.extras.length ? 1 : 0) };
+  N.cr = N.bd + 1;
+  $('#numMejoria').textContent = pad(N.mej); $('#numExtras').textContent = pad(N.ext);
+  $('#numBreakdown').textContent = pad(N.bd); $('#numCreditos').textContent = pad(N.cr);
+  $('#coverFiles').textContent = `${uniqueFiles().length} archivos FBX`;
+  const items = [
+    ['01', 'Línea de progreso · Personajes, Animaciones, Escenarios', '#curaduria', 'Curaduría'],
+    [`02–${pad(n + 1)}`, 'Mis piezas FBX interactivas', '#p-' + data.entries[0].id, 'Criterio 4'],
+    [pad(N.mej), 'Antes / después · Task04 → Task05', '#mejoria', 'Proceso iterativo'],
+    ...(data.extras.length ? [[pad(N.ext), 'Piezas adicionales', '#extras', 'Curaduría']] : []),
+    [pad(N.bd), 'Breakdown individual', '#breakdown', 'Breakdown'],
+    [pad(N.cr), 'Créditos y cierre', '#creditos', 'Créditos']
+  ];
+  $('#indexList').innerHTML = items.map(([n, t, h, c]) => `<li><a href="${h}"><span class="ic-num">${n}</span><span class="ic-name">${esc(t)}</span><span class="ic-crit">${c}</span></a></li>`).join('');
+  const tabs = [['01', 'Progreso', '#curaduria'], ...data.entries.map((e, i) => [pad(i + 2), e.code, '#p-' + e.id]),
+    [pad(N.mej), 'Antes/Después', '#mejoria'], ...(data.extras.length ? [[pad(N.ext), 'Extras', '#extras']] : []), [pad(N.bd), 'Breakdown', '#breakdown'], [pad(N.cr), 'Créditos', '#creditos']];
+  $('#tabs').innerHTML = tabs.map(([n, t, h]) => `<a href="${h}" data-target="${h.slice(1)}"><span>${n}</span>${esc(t)}</a>`).join('');
+}
+
+function renderLadder() {
+  const all = [...data.entries, ...data.extras];
+  const count = c => all.filter(e => c === 'todo' || e.cat === c).length;
+  $('#catFilter').innerHTML = `<span class="t">Filtrar:</span>` + [['todo', 'Todo'], ...Object.entries(CATS)].map(([k, t]) =>
+    `<button data-cat="${k}" class="${catFilter === k ? 'on' : ''}" aria-pressed="${catFilter === k}">${t}<b>${count(k)}</b></button>`).join('');
+  const list = all.filter(e => catFilter === 'todo' || e.cat === catFilter);
+  const rise = list.length > 1 ? Math.min(44, Math.round(200 / (list.length - 1))) : 0;
+  $('#ladder').style.setProperty('--cols', Math.max(1, Math.min(list.length, 4)));
+  $('#ladder').innerHTML = list.map((e, i) => {
+    const loaded = e.files.filter(f => statsStore[f.name]);
+    const unl = e.files.some(f => availability[f.name] === null);
+    const st = loaded.length === e.files.length ? `<span class="st ok">✓ ${loaded.some(f => statsStore[f.name].animated) ? 'animado' : 'estático'}</span>`
+      : unl ? `<span class="st">sin vincular</span>` : '';
+    return `<a class="step${i === list.length - 1 && list.length > 1 ? ' peak' : ''}" href="#p-${e.id}" style="--rise:${(i % 4) * rise}">${st}
+      <span class="step-cat">${esc(CATS[e.cat] || 'Pieza')}</span>
+      <div class="step-code">${esc(e.code)}</div>
+      <div class="step-stage">${esc(e.stage)}</div>
+      <div class="step-title">${esc(e.title)}</div>
+      <div class="step-file">${e.files.map(f => esc(f.name)).join('<br>')}</div>
+      <div class="meter" aria-label="Paso ${i + 1} de ${list.length}">${list.map((_, j) => `<i class="${j <= i ? 'on' : ''}"></i>`).join('')}<span>mi progreso</span></div>
+    </a>`;
+  }).join('');
+  // Las secciones de piezas siguen el mismo filtro
+  $$('section.piece[data-cat]').forEach(s => { s.hidden = catFilter !== 'todo' && s.dataset.cat !== catFilter; });
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('#catFilter [data-cat]'); if (!b) return;
+  catFilter = b.dataset.cat; renderLadder();
+});
+
+function renderCompare() {
+  $('#cmpRows').innerHTML = data.compare.rows.map((r, i) => `
+    <tr data-item="compare.rows.${i}">
+      <td data-h="Criterio"><span data-bind="compare.rows.${i}.criterion" data-ph="Criterio"></span></td>
+      <td data-h="Antes · Task 04"><span data-bind="compare.rows.${i}.before" data-ph="Cómo era antes"></span></td>
+      <td data-h="Después · Task 05"><span data-bind="compare.rows.${i}.after" data-ph="Cómo quedó"></span>
+        <button class="rm edit-only" data-rm="compare.rows" data-i="${i}" title="Quitar" style="position:relative;top:0;right:0;margin-left:6px;display:inline-flex">×</button></td>
+    </tr>`).join('');
+}
+
+function renderBreakdown() {
+  const used = k => k !== 'pendiente' || data.breakdown.some(b => b.who === k) || document.body.classList.contains('editing');
+  $('#legend').innerHTML = `<span class="t">Leyenda:</span>` + WHO_ORDER.filter(used).map(k => `<span class="chip ${k}">${WHO[k]}</span>`).join('') +
+    `<span class="t edit-only" style="margin-left:8px">(en modo edición, haz clic en una etiqueta para cambiarla)</span>`;
+  $('#bdRows').innerHTML = data.breakdown.map((b, i) => `
+    <tr data-item="breakdown.${i}">
+      <td><span data-bind="breakdown.${i}.area" data-ph="Área"></span></td>
+      <td><button class="chip ${b.who}" data-who="${i}" title="${WHO[b.who]}">${WHO[b.who]}</button></td>
+      <td style="position:relative;padding-right:40px"><span data-bind="breakdown.${i}.detail" data-ph="Qué hiciste o decidiste exactamente"></span>
+        <button class="rm edit-only" data-rm="breakdown" data-i="${i}" title="Quitar">×</button></td>
+    </tr>`).join('');
+  const count = k => data.breakdown.filter(b => b.who === k).length;
+  $('#bdSummary').innerHTML = `<h3>Resumen</h3>
+    ${['yo', 'decidi', 'apoyo', 'base', 'pendiente'].filter(k => count(k) || k === 'yo').map(k => `<div class="bd-count"><b>${count(k)}</b><span>${WHO[k]}</span></div>`).join('')}
+    <p>Todo lo que no marqué como “Hecho por mí” lo acredito abajo, en Créditos.</p>`;
+}
+
+function credList(path, title, cls = '') {
+  const arr = getPath(data, path);
+  return `<div class="cred-col ${cls}"><span class="folder-tab">${title}</span><div class="cred-box">
+    <ul class="cred-list">${arr.map((c, i) => `<li data-item="${path}.${i}" style="padding-right:30px">
+      <span class="n" data-bind="${path}.${i}.name" data-ph="Nombre"></span>
+      <span class="d" data-bind="${path}.${i}.detail" data-ph="Uso / detalle / enlace"></span>
+      <button class="rm edit-only" data-rm="${path}" data-i="${i}" title="Quitar" style="top:8px;right:0">×</button></li>`).join('')}
+    </ul><button class="add edit-only" data-add="${path}" data-tpl="credit">+ Añadir</button></div></div>`;
+}
+
+function renderCredits() {
+  const files = uniqueFiles();
+  const filesHTML = `<div class="cred-col wide"><span class="folder-tab">Archivos asociados</span><div class="cred-box">
+    <table class="files-table"><thead><tr><th>Archivo</th><th>Pieza</th><th>Estado</th><th>Peso</th></tr></thead><tbody>
+    ${files.map(f => {
+      const s = statsStore[f.key]; const a = availability[f.key];
+      const st = s ? `<span class="ok">✓ ${s.animated ? 'animado' : 'estático'}</span> · ${a === 'carpeta' ? 'carpeta' : 'navegador'}` : a === null ? 'sin vincular' : 'se carga al verlo';
+      const used = allSlots().filter(x => x.key === f.key).map(x => x.entry.code).join(' + ');
+      return `<tr><td>${esc(f.key)}<br><span style="font-weight:400;color:var(--muted)">${esc(displayPath(f.key, f.cat))}</span></td><td>${esc(used)}</td><td>${st}</td><td>${s ? fmtMB(s.size) : '—'}</td></tr>`;
+    }).join('')}
+    <tr><td>cielo_Leyenditas.png<br><span style="font-weight:400;color:var(--muted)">./assets/escenarios/cielo_Leyenditas.png</span></td><td>Escenario</td><td>fondo del visor</td><td>0.91 MB</td></tr>
+    <tr><td>index.html</td><td>Portafolio</td><td>este visor</td><td>—</td></tr>
+    </tbody></table></div></div>`;
+  $('#credGrid').innerHTML =
+    credList('credits.tools', 'Herramientas / software') +
+    credList('credits.sources', 'Fuentes y recursos base') +
+    credList('credits.references', 'Referencias') +
+    credList('credits.people', 'Colaboradores y feedback') +
+    filesHTML;
+}
+
+/** Rellena todos los [data-bind] con su texto y aplica edición / marcas de borrador. */
+function hydrate(root = document) {
+  const editing = document.body.classList.contains('editing');
+  $$('[data-bind]', root).forEach(el => {
+    const path = el.dataset.bind;
+    const v = getPath(data, path);
+    if (document.activeElement !== el) el.textContent = v ?? '';
+    if (editing) { try { el.contentEditable = 'plaintext-only'; } catch { el.contentEditable = 'true'; } }
+    else el.removeAttribute('contenteditable');
+    el.classList.toggle('is-draft', isDraft(path));
+  });
+}
+function isDraft(path) {
+  if (data._drafts.includes(path)) return true;
+  const parent = getPath(data, path.split('.').slice(0, -1).join('.'));
+  return !!(parent && parent.draft);
+}
+
+function renderEditbar() {
+  const drafts = countDrafts();
+  const pend = data.breakdown.filter(b => b.who === 'pendiente').length;
+  const unlinked = allSlots().filter(s => availability[s.key] === null).length;
+  const pill = (n, t, ok) => `<span class="pill ${n ? '' : 'ok'}">${n ? n + ' ' + t : '✓ ' + ok}</span>`;
+  $('#editbar').innerHTML = `<b>Modo edición</b>
+    <span>Puedo editar mis textos y guardar mis cambios en este navegador.</span>
+    ${pill(drafts, 'borradores por revisar', 'textos revisados')} ${pill(pend, 'áreas por confirmar', 'breakdown confirmado')} ${pill(unlinked, 'archivos sin vincular', 'archivos vinculados')}
+    <button class="btn" id="editDone" style="margin-left:auto">Listo</button>`;
+  $('#editDone').onclick = () => setEditing(false);
+}
+function countDrafts() {
+  let n = data._drafts.length;
+  const walk = o => { if (Array.isArray(o)) o.forEach(walk); else if (isObj(o)) { if (o.draft) n++; Object.values(o).forEach(walk); } };
+  walk(data.entries); walk(data.extras); walk(data.compare); walk(data.breakdown); walk(data.credits);
+  return n;
+}
+
+function onStatsChanged() {
+  renderLadder();
+  $$('[data-ficha]').forEach(el => { const e = getPath(data, el.dataset.ficha); if (e) el.innerHTML = fichaHTML(e); });
+  renderCredits(); hydrate($('#credGrid'));
+  if (document.body.classList.contains('editing')) renderEditbar();
+}
+
+function renderAll() {
+  renderIndex(); renderLadder(); renderPieces(); renderCompare(); renderBreakdown(); renderCredits();
+  // "Piezas adicionales" solo aparece si hay piezas extra o al editar
+  $('#extras').hidden = !data.extras.length && !document.body.classList.contains('editing');
+  hydrate();
+  if (document.body.classList.contains('editing')) renderEditbar();
+  viewers.forEach(v => v.refreshSegments());
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   F. EDICIÓN
+   ══════════════════════════════════════════════════════════════════ */
+function setEditing(on) {
+  document.body.classList.toggle('editing', on);
+  $('#btnEdit').setAttribute('aria-pressed', on);
+  if (on) setPresenting(false);
+  $('#extras').hidden = !data.extras.length && !on;
+  hydrate(); if (on) renderEditbar();
+  viewers.forEach(v => v.refreshSegments());
+  if (!on) toast('Cambios guardados en este navegador. Usa ⋯ → Exportar JSON para respaldarlos.');
+}
+
+document.addEventListener('input', e => {
+  const el = e.target.closest?.('[data-bind]'); if (!el || !document.body.classList.contains('editing')) return;
+  const path = el.dataset.bind;
+  setPath(data, path, el.innerText.replace(/\n$/, ''));
+  // al editar, deja de ser borrador
+  data._drafts = data._drafts.filter(p => p !== path);
+  const parent = getPath(data, path.split('.').slice(0, -1).join('.'));
+  if (parent && parent.draft) { parent.draft = false; const item = el.closest('[data-item]'); item && $$('[data-bind]', item).forEach(x => x.classList.remove('is-draft')); }
+  el.classList.remove('is-draft');
+  // textos que se repiten en la página (p. ej. el autor) se actualizan en vivo
+  $$(`[data-bind="${CSS.escape(path)}"]`).forEach(x => { if (x !== el) x.textContent = el.innerText; });
+  save();
+  clearTimeout(document._eb); document._eb = setTimeout(() => { renderEditbar(); if (/^entries|^extras/.test(path)) { renderLadder(); renderIndex(); } }, 500);
+});
+document.addEventListener('keydown', e => {
+  // Enter en títulos cortos = salir del campo
+  const el = e.target.closest?.('[data-bind]');
+  if (el && e.key === 'Enter' && !e.shiftKey && /title|code|name|criterion|area|author|course|term|character|kicker|stage/.test(el.dataset.bind.split('.').pop())) { e.preventDefault(); el.blur(); }
+});
+
+document.addEventListener('click', e => {
+  const add = e.target.closest('[data-add]');
+  if (add) { getPath(data, add.dataset.add).push(TPL[add.dataset.tpl]()); save(); renderAll(); return; }
+  const rm = e.target.closest('[data-rm]');
+  if (rm) { getPath(data, rm.dataset.rm).splice(+rm.dataset.i, 1); save(); renderAll(); return; }
+  const who = e.target.closest('[data-who]');
+  if (who && document.body.classList.contains('editing')) {
+    const b = data.breakdown[+who.dataset.who];
+    b.who = WHO_ORDER[(WHO_ORDER.indexOf(b.who) + 1) % WHO_ORDER.length]; b.draft = false;
+    save(); renderBreakdown(); hydrate($('#breakdown')); renderEditbar(); return;
+  }
+  const rx = e.target.closest('[data-rm-extra]');
+  if (rx) removeExtra(rx.dataset.rmExtra);
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   G. SUBIR FBX (selector múltiple + arrastrar y soltar en la página)
+   ══════════════════════════════════════════════════════════════════ */
+async function handleFiles(list) {
+  const files = [...list].filter(f => /\.fbx$/i.test(f.name));
+  if (!files.length) return toast('Solo se aceptan archivos .fbx');
+  let matched = 0, added = 0; const touched = [];
+  for (const f of files) {
+    const slot = allSlots().find(s => s.key.toLowerCase() === f.name.toLowerCase());
+    if (slot) { await saveFile(slot.key, f); touched.push(slot.key); matched++; continue; }
+    const id = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const title = f.name.replace(/\.fbx$/i, '').replace(/[_-]+/g, ' ');
+    data.extras.push(makeExtra(id, f.name, guessCat(f.name)));
+    await saveFile(f.name, f); added++;
+  }
+  if (added) { save(); syncExtras(); renderAll(); }
+  touched.forEach(reloadKey);
+  hideNoticeIfReady();
+  toast(`${matched ? matched + ' archivo(s) vinculado(s) por nombre' : ''}${matched && added ? ' · ' : ''}${added ? added + ' pieza(s) nueva(s) en “Piezas adicionales”' : ''}`);
+  if (added && !matched) $('#extras').scrollIntoView({ behavior: 'smooth' });
+}
+
+/** Pieza adicional con textos en primera persona listos para presentar. */
+function makeExtra(id, name, cat, auto = false) {
+  const title = name.replace(/\.fbx$/i, '').replace(/[_-]+/g, ' ');
+  const what = { personajes: 'un modelo de La Llorona', animaciones: 'una animación de La Llorona', escenarios: 'un escenario para La Llorona' }[cat];
+  return {
+    id, auto, cat, code: CATS[cat], stage: 'Pieza adicional · ' + CATS[cat], title, kicker: 'hito de proceso',
+    files: [{ name, label: title }],
+    note: `Sumé esta pieza a mi carpeta de ${CATS[cat].toLowerCase()}: es ${what} que complementa mi progresión y muestra otra etapa de mi trabajo.`,
+    contribution: `Preparé y exporté este archivo desde Maya 2027 y lo integré al portafolio dentro de la categoría ${CATS[cat]}.`,
+    iterations: []
+  };
+}
+
+function syncExtras() {
+  const host = $('#extrasList');
+  data.extras.forEach((e, i) => { if (!$('#p-' + e.id)) buildPiece(e, host, 'E' + (i + 1), i % 2 === 1); });
+}
+async function removeExtra(id) {
+  const i = data.extras.findIndex(e => e.id === id); if (i < 0) return;
+  if (!confirm(`¿Quitar la pieza “${data.extras[i].title}” del portafolio? (El archivo se borra de este navegador.)`)) return;
+  const e = data.extras.splice(i, 1)[0];
+  pieceViewers.get(id)?.dispose(); pieceViewers.delete(id); $('#p-' + id)?.remove();
+  for (const f of e.files) { await IDB.del(f.name); delete statsStore[f.name]; }
+  save(); renderAll();
+}
+
+const hasFiles = e => [...(e.dataTransfer?.types || [])].includes('Files');
+let dragDepth = 0;
+function hidePageDrop() { dragDepth = 0; $('#pageDrop').classList.remove('show'); }
+window.addEventListener('dragenter', e => { if (hasFiles(e)) { dragDepth++; $('#pageDrop').classList.add('show'); } });
+window.addEventListener('dragleave', e => { if (hasFiles(e) && --dragDepth <= 0) hidePageDrop(); });
+window.addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
+window.addEventListener('drop', e => { if (!hasFiles(e)) return; e.preventDefault(); hidePageDrop(); handleFiles(e.dataTransfer.files); });
+
+const pick = () => $('#fileInput').click();
+$('#btnUpload').onclick = pick; $('#btnUpload2').onclick = pick; $('#noticeUpload').onclick = pick;
+$('#fileInput').onchange = e => { const f = e.target.files; if (f.length) handleFiles(f); e.target.value = ''; };
+
+/* Aviso de "primeros pasos" cuando faltan archivos */
+function showNotice() { if (lsGet(LS_NOTICE) !== '1') $('#notice').hidden = false; }
+function hideNoticeIfReady() { if (!allSlots().some(s => availability[s.key] === null)) $('#notice').hidden = true; }
+$('#noticeClose').onclick = () => { $('#notice').hidden = true; lsSet(LS_NOTICE, '1'); };
+
+/* ══════════════════════════════════════════════════════════════════
+   H. MODO PRESENTACIÓN (docente)
+   ══════════════════════════════════════════════════════════════════ */
+let stepIdx = 0;
+const steps = () => $$('[data-step]').filter(s => !s.hidden && !(s.id === 'extras' && !data.extras.length));
+function setPresenting(on) {
+  document.body.classList.toggle('presenting', on);
+  $('#btnPresent').setAttribute('aria-pressed', on);
+  $('#btnPresent').innerHTML = on ? '■ <span class="lbl-long">Salir</span>' : '▶ <span class="lbl-long">Presentación</span>';
+  if (on) { if (document.body.classList.contains('editing')) setEditing(false); goStep(currentStep()); }
+  $('#extras').hidden = !data.extras.length && !document.body.classList.contains('editing');
+}
+function currentStep() {
+  const s = steps(); const y = window.scrollY + window.innerHeight * 0.3;
+  let k = 0; s.forEach((el, i) => { if (el.offsetTop <= y) k = i; }); return k;
+}
+function goStep(i) {
+  const s = steps(); stepIdx = Math.max(0, Math.min(s.length - 1, i));
+  s[stepIdx].scrollIntoView({ behavior: 'smooth', block: 'start' }); updateHud();
+}
+function updateHud() {
+  const s = steps(); $('#hudLabel').innerHTML = `${esc(s[stepIdx]?.dataset.label || '')}<small>dmrq's portfolio · ${stepIdx + 1} / ${s.length}</small>`;
+}
+$('#btnPresent').onclick = () => setPresenting(!document.body.classList.contains('presenting'));
+$('#hudPrev').onclick = () => goStep(stepIdx - 1);
+$('#hudNext').onclick = () => goStep(stepIdx + 1);
+$('#hudExit').onclick = () => setPresenting(false);
+$('#btnEdit').onclick = () => setEditing(!document.body.classList.contains('editing'));
+
+document.addEventListener('keydown', e => {
+  const t = e.target; if (t.closest?.('input,select,textarea,[contenteditable]:not([contenteditable=false])')) return;
+  const pres = document.body.classList.contains('presenting');
+  if (e.key === 'p' || e.key === 'P') { setPresenting(!pres); e.preventDefault(); }
+  else if (pres && (e.key === 'ArrowRight' || e.key === 'PageDown')) { e.preventDefault(); goStep(stepIdx + 1); }
+  else if (pres && (e.key === 'ArrowLeft' || e.key === 'PageUp')) { e.preventDefault(); goStep(stepIdx - 1); }
+  else if (pres && e.key === 'Escape' && !document.fullscreenElement) setPresenting(false);
+});
+
+/* Pestaña activa según la sección visible */
+const secIO = new IntersectionObserver(ents => {
+  ents.forEach(en => {
+    if (!en.isIntersecting) return;
+    $$('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.target === en.target.id));
+    const i = steps().indexOf(en.target); if (i >= 0) { stepIdx = i; updateHud(); }
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+
+/* ══════════════════════════════════════════════════════════════════
+   I. EXPORTAR / IMPORTAR JSON
+   ══════════════════════════════════════════════════════════════════ */
+$('#btnData').onclick = e => { const m = $('#dataMenu'); m.hidden = !m.hidden; e.currentTarget.setAttribute('aria-expanded', !m.hidden); };
+document.addEventListener('click', e => { if (!e.target.closest('.menu')) $('#dataMenu').hidden = true; });
+$('#btnExport').onclick = () => {
+  const blob = new Blob([JSON.stringify({ ...data, exportedAt: new Date().toISOString(), files: allSlots().map(s => s.key) }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'portafolio-fbx-datos.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('JSON exportado (los .fbx no se incluyen: siguen en tu carpeta).');
+};
+$('#btnImport').onclick = () => $('#jsonInput').click();
+$('#jsonInput').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try {
+    const obj = JSON.parse(await f.text());
+    if (!obj || !Array.isArray(obj.entries)) throw new Error('El archivo no parece un respaldo de este portafolio.');
+    delete obj.exportedAt; delete obj.files;
+    lsSet(LS_KEY, JSON.stringify(upgradeData(obj)));
+    toast('Respaldo importado. Recargando…'); setTimeout(() => location.reload(), 700);
+  } catch (err) { toast('No se pudo importar: ' + err.message, 5000); }
+};
+$('#btnReset').onclick = () => {
+  if (!confirm('¿Restaurar todos los textos a la plantilla inicial? Tus FBX guardados se conservan.')) return;
+  try { [LS_KEY, LEGACY_KEY, INITIAL_KEY].forEach(k => localStorage.removeItem(k)); } catch {}
+  location.reload();
+};
+$('#btnForget').onclick = async () => {
+  if (!confirm('¿Borrar los .fbx guardados en este navegador? (Los archivos de tu carpeta no se tocan.)')) return;
+  await IDB.clear(); location.reload();
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   J. COMPARACIÓN ANTES / DESPUÉS
+   ══════════════════════════════════════════════════════════════════ */
+function buildCompare() {
+  const before = new Viewer($('#cmpBefore'), { slots: [{ key: data.compare.before, label: 'Antes' }], compact: true });
+  const after = new Viewer($('#cmpAfter'), { slots: [{ key: data.compare.after, label: 'Después' }], compact: true });
+  let linkCam = true;
+  before.linked = { other: after, enabled: () => linkCam };
+  after.linked = { other: before, enabled: () => linkCam };
+  const both = fn => [before, after].forEach(fn);
+  $('#cmpPlay').onclick = () => both(v => { v.setTime(v.range ? v.range.start : 0); v.play(); });
+  $('#cmpPause').onclick = () => both(v => v.pause());
+  const sc = $('#cmpScrub');
+  sc.addEventListener('input', () => { paintRange(sc); both(v => { v.pause(); v.setNormalized(sc.value / 1000); }); });
+  $('#cmpSpeed').addEventListener('click', e => {
+    const b = e.target.closest('[data-speed]'); if (!b) return;
+    $$('#cmpSpeed button').forEach(x => x.classList.toggle('on', x === b)); both(v => v.setSpeed(+b.dataset.speed));
+  });
+  $('#cmpLinkCam').onclick = e => { linkCam = !linkCam; e.currentTarget.setAttribute('aria-pressed', linkCam); e.currentTarget.textContent = linkCam ? 'Cámaras vinculadas' : 'Cámaras libres'; };
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   K. ARRANQUE
+   ══════════════════════════════════════════════════════════════════ */
+async function init() {
+  // Manifiesto de ./assets (lo genera actualizar-assets.ps1): los .fbx nuevos que dejes en las carpetas se agregan solos
+  if (IS_HTTP) {
+    try {
+      const r = await fetch('./assets/manifest.json', { cache: 'no-cache' });
+      if (r.ok) MANIFEST = await r.json();
+    } catch { /* sin manifiesto: se usan las rutas por defecto */ }
+  }
+  if (MANIFEST) {
+    const known = new Set(allSlots().map(s => s.key.toLowerCase()));
+    for (const c of Object.keys(CATS)) for (const name of (MANIFEST[c] || [])) {
+      if (!/\.fbx$/i.test(name) || known.has(name.toLowerCase())) continue;
+      data.extras.push(makeExtra('a' + name.replace(/[^a-z0-9]/gi, ''), name, c, true)); known.add(name.toLowerCase());
+    }
+  }
+  data.entries.forEach((e, i) => buildPiece(e, $('#pieces'), String(i + 2).padStart(2, '0'), i % 2 === 1));
+  syncExtras();
+  buildCompare();
+  renderAll();
+  $$('[data-step]').forEach(s => secIO.observe(s));
+  $$('input[type=range]').forEach(paintRange);
+
+  // Disponibilidad previa de archivos (para el aviso y la ficha de créditos)
+  const keys = new Set(await IDB.keys());
+  allSlots().forEach(s => { if (keys.has(s.key)) availability[s.key] = 'navegador'; });
+  if (!IS_HTTP && allSlots().some(s => !keys.has(s.key))) {
+    allSlots().forEach(s => { if (!keys.has(s.key)) availability[s.key] = null; });
+    showNotice(); onStatsChanged();
+  }
+}
+init();
+window.portafolio = { viewers, statsStore, get data() { return data; } }; // acceso para depurar desde la consola
+</script>
+</body>
+</html>
